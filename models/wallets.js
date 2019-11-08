@@ -6,7 +6,7 @@ const WalletModel = {
       id SERIAL PRIMARY KEY,
       address TEXT,
       name TEXT,
-      satoshi_balance DOUBLE PRECISION DEFAULT 0
+      satoshi_balance NUMERIC DEFAULT 0
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS wallets(${schema});`);

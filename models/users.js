@@ -6,13 +6,13 @@ const UserModel = {
   async schema() {
     const schema = `
       uuid TEXT PRIMARY KEY,
-      admin BOOLEAN NOT NULL DEFAULT FALSE,
-      email_address TEXT NOT NULL UNIQUE,
+      admin BOOLEAN DEFAULT FALSE,
+      email_address TEXT UNIQUE,
       email_verification TEXT,
-      email_verified BOOLEAN NOT NULL DEFAULT FALSE,
+      email_verified BOOLEAN DEFAULT FALSE,
       telephone BIGINT,
-      telephone_verifiction BIGINT,
-      telephone_verified BOOLEAN NOT NULL DEFAULT FALSE,
+      telephone_verification BIGINT,
+      telephone_verified BOOLEAN DEFAULT FALSE,
       text_messages BOOLEAN DEFAULT TRUE,
       first_name TEXT,
       last_name TEXT,
@@ -27,8 +27,8 @@ const UserModel = {
       binance_us_secret TEXT,
       kraken_key TEXT,
       kraken_secret TEXT,
-      created_at DATE NOT NULL DEFAULT CURRENT_DATE,
-      updated_at DATE NOT NULL DEFAULT CURRENT_DATE
+      created_at TIMESTAMP DEFAULT CURRENT_DATE,
+      updated_at TIMESTAMP DEFAULT CURRENT_DATE
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS users(${schema});`);
@@ -36,17 +36,29 @@ const UserModel = {
       throw new Error('Users table schema error');
     }
   },
-  async verifyUserTelephone(uuid, payload) {
-    const { telephone_verification } = payload;
+  async updateUserTelephone(uuid, telephone) {
     const sql = {
       update: `UPDATE users SET
-      telephone_verified = true,
+        telephone = $2
+        WHERE uuid = $1;`,
+    };
+    try {
+      await pool.query(sql.update, [uuid, telephone]);
+      return this.selectUser(uuid, false);
+    } catch (err) {
+      throw new Error(err.detail);
+    }
+  },
+  async verifyUserTelephone(uuid, telephone_verification) {
+    const sql = {
+      update: `UPDATE users SET
+        telephone_verified = true
         WHERE uuid = $1;`,
     };
     try {
       const user = await this.selectUser(uuid, false);
       if (user.telephone_verification !== telephone_verification) {
-        throw new Error('Telephone number is not valid');
+        throw new Error('Telephone verification is not valid');
       }
       await pool.query(sql.update, [uuid]);
       return this.selectUser(uuid);
@@ -108,7 +120,7 @@ const UserModel = {
     const sql = {
       select: 'SELECT * FROM users WHERE email_address = $1 LIMIT 1',
       insert: `INSERT INTO users 
-      (email_address, first_name, last_name, email_verification, telephone_verifiction, password, uuid)
+      (email_address, first_name, last_name, email_verification, telephone_verification, password, uuid)
       VALUES($1, $2, $3, $4, $5, $6, $7)`,
     };
     try {

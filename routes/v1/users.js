@@ -273,8 +273,45 @@ router.post('/verify-email', async (req, res) => {
 
 /**
  * @swagger
- * /users/verify-email:
+ * /users/telephone:
  *   put:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /users/telephone
+ *     tags:
+ *       - Users
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              telephone:
+ *                type: number
+ *     responses:
+ *       200:
+ *         schema:
+ *          $ref: '#/definitions/Users'
+ */
+
+router.put('/telephone', auth, async (req, res) => {
+  const { uuid } = req.user;
+  const { telephone } = req.body;
+  try {
+    const user = await UserService.updateUserTelephone(uuid, telephone);
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /users/verify-email:
+ *   post:
  *     security:
  *       - ApiKeyAuth: []
  *     summary: /users/verify-email
@@ -299,7 +336,47 @@ router.post('/verify-email', async (req, res) => {
  *          $ref: '#/definitions/Users'
  */
 
-router.put('/update-password', auth, async (req, res) => {
+router.post('/verify-telephone', auth, async (req, res) => {
+  const { uuid } = req.user;
+  const { telephone_verification } = req.body;
+  try {
+    const user = await UserModel.verifyUserTelephone(
+      uuid,
+      telephone_verification,
+    );
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /users/password:
+ *   put:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /users/password
+ *     tags:
+ *       - Users
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              password:
+ *                type: string
+ *     responses:
+ *       200:
+ *         schema:
+ *          $ref: '#/definitions/Users'
+ */
+
+router.put('/password', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
     const user = await UserModel.updateUserPassword(uuid, req.body);

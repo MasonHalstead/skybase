@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
-const { KRAKEN_DATABASE_URL } = process.env;
+const { BINANCE_DATABASE_URL } = process.env;
 
-let connection = `${KRAKEN_DATABASE_URL}`;
+let connection = `${BINANCE_DATABASE_URL}`;
 const pool = new Pool({ connectionString: connection });
 
 module.exports = {

@@ -45,6 +45,7 @@
     "random-number": "0.0.9",
     "serve-favicon": "^2.5.0",
     "swagger-jsdoc": "^3.4.0",
+    "twilio": "^3.37.0",
     "uuid": "^3.3.3",
     "winston": "^3.2.1"
   }

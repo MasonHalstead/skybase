@@ -8,8 +8,8 @@ const ActivityModel = {
       message TEXT,
       reference_table TEXT,
       reference_column TEXT,
-      reference_id BIGINT,
-      created_time DATE NOT NULL DEFAULT CURRENT_DATE
+      reference_id TEXT,
+      date_time TIMESTAMP DEFAULT CURRENT_DATE
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS activity(${schema});`);
@@ -57,5 +57,4 @@ const ActivityModel = {
     }
   },
 };
-
 module.exports = ActivityModel;
