@@ -1,0 +1,24 @@
+[
+    [
+        "XBT_USD",
+        "XBT/USD",
+        "XBTUSD",
+        "XBT",
+        "USD",
+        false,
+        false,
+        true,
+        false
+    ],
+    [
+        "ETH_USD",
+        "ETH/USD",
+        "ETHUSD",
+        "ETH",
+        "USD",
+        true,
+        true,
+        true,
+        true
+    ]
+]

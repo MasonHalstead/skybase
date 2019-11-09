@@ -1,17 +1,18 @@
 const pool = require('../db/skydax');
+const data = require('../data/order_types.json');
 
-const OrderTypesModel = {
+const OrderTypeModel = {
   async schema() {
     const schema = `
       id SERIAL PRIMARY KEY,
-      name TEXT,
+      name TEXT UNIQUE,
       query_name TEXT,
       on_binance BOOLEAN DEFAULT TRUE,
       on_binance_us BOOLEAN DEFAULT TRUE,
       on_bitmex BOOLEAN DEFAULT TRUE,
       on_kraken BOOLEAN DEFAULT TRUE,
-      created_at TIMESTAMP DEFAULT CURRENT_DATE,
-      updated_at TIMESTAMP DEFAULT CURRENT_DATE
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS order_types(${schema});`);
@@ -30,6 +31,20 @@ const OrderTypesModel = {
       throw new Error(err.detail);
     }
   },
+  async insertOrderTypes() {
+    const sql = {
+      insert: `INSERT INTO order_types 
+      (name, query_name)
+      VALUES($1, $2)
+      ON CONFLICT(name) 
+      DO NOTHING`,
+    };
+    try {
+      data.forEach(order_type => pool.query(sql.insert, order_type));
+    } catch (err) {
+      throw new Error(err.detail);
+    }
+  },
 };
 
-module.exports = OrderTypesModel;
+module.exports = OrderTypeModel;

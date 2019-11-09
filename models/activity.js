@@ -9,7 +9,7 @@ const ActivityModel = {
       reference_table TEXT,
       reference_column TEXT,
       reference_id TEXT,
-      date_time TIMESTAMP DEFAULT CURRENT_DATE
+      date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS activity(${schema});`);

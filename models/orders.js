@@ -13,7 +13,7 @@ const OrderModel = {
       quantity NUMERIC,
       price NUMERIC,
       status_id INT REFERENCES status (id),
-      date_time TIMESTAMP DEFAULT CURRENT_DATE
+      date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS orders(${schema});`);

@@ -159,28 +159,28 @@ const publicUser = async user => {
   let kraken_secret = null;
 
   if (user.bitmex_key) {
-    bitmex_key = await crypto.decrypt(user.bitmex_key);
+    bitmex_key = crypto.decrypt(user.bitmex_key);
   }
   if (user.bitmex_secret) {
-    bitmex_secret = await crypto.decrypt(user.bitmex_secret);
+    bitmex_secret = crypto.decrypt(user.bitmex_secret);
   }
   if (user.binance_key) {
-    binance_key = await crypto.decrypt(user.binance_key);
+    binance_key = crypto.decrypt(user.binance_key);
   }
   if (user.binance_secret) {
-    binance_secret = await crypto.decrypt(user.binance_secret);
+    binance_secret = crypto.decrypt(user.binance_secret);
   }
   if (user.binance_us_key) {
-    binance_us_key = await crypto.decrypt(user.binance_us_key);
+    binance_us_key = crypto.decrypt(user.binance_us_key);
   }
   if (user.binance_us_secret) {
-    binance_us_secret = await crypto.decrypt(user.binance_us_secret);
+    binance_us_secret = crypto.decrypt(user.binance_us_secret);
   }
   if (user.kraken_key) {
-    kraken_key = await crypto.decrypt(user.kraken_key);
+    kraken_key = crypto.decrypt(user.kraken_key);
   }
   if (user.kraken_secret) {
-    kraken_secret = await crypto.decrypt(user.kraken_secret);
+    kraken_secret = crypto.decrypt(user.kraken_secret);
   }
   return {
     uuid: user.uuid,

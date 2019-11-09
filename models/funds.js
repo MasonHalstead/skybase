@@ -13,8 +13,8 @@ const FundModel = {
       public_key TEXT,
       public_secret TEXT,
       container_image TEXT,
-      reconciled_time TIMESTAMP DEFAULT CURRENT_DATE,
-      created_at TIMESTAMP DEFAULT CURRENT_DATE
+      reconciled_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS funds(${schema});`);

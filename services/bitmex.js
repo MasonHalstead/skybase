@@ -4,7 +4,7 @@ const UserUtils = require('../utils/users');
 const EmailEmitter = require('../subscribers/email');
 const TextEmitter = require('../subscribers/text_message');
 
-const UserService = {
+const BitmexService = {
   async registerUser(payload) {
     const user = await UserModel.insertUser(payload);
     EmailEmitter.emit('send_verify_email', user);
@@ -34,4 +34,4 @@ const UserService = {
   },
 };
 
-module.exports = UserService;
+module.exports = BitmexService;

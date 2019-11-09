@@ -27,8 +27,8 @@ const UserModel = {
       binance_us_secret TEXT,
       kraken_key TEXT,
       kraken_secret TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_DATE,
-      updated_at TIMESTAMP DEFAULT CURRENT_DATE
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS users(${schema});`);
@@ -115,7 +115,7 @@ const UserModel = {
       throw new Error(err.detail);
     }
   },
-  async createUser(payload) {
+  async insertUser(payload) {
     const { email_address } = payload;
     const sql = {
       select: 'SELECT * FROM users WHERE email_address = $1 LIMIT 1',

@@ -1,0 +1,18 @@
+[
+    [
+        "Limit",
+        "Limit"
+    ],
+    [
+        "Market",
+        "Market"
+    ],
+    [
+        "Stop Market",
+        "Stop"
+    ],
+    [
+        "Stop Limit",
+        "StopLimit"
+    ]
+]

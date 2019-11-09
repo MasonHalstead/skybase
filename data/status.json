@@ -1,0 +1,23 @@
+[
+    [
+        "Queued"
+    ],
+    [
+        "Starting"
+    ],
+    [
+        "Running"
+    ],
+    [
+        "Complete"
+    ],
+    [
+        "Stopped"
+    ],
+    [
+        "Failed"
+    ],
+    [
+        "Archived"
+    ]
+]

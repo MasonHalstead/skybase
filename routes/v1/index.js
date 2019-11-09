@@ -10,8 +10,10 @@ const order_types = require('./order_types');
 const activity = require('./activity');
 const status = require('./status');
 const pairs = require('./pairs');
+const auth = require('./auth');
 
 router.use('/docs', docs);
+router.use('/auth', auth);
 router.use('/users', users);
 router.use('/wallets', wallets);
 router.use('/exchanges', exchanges);

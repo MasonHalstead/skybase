@@ -6,12 +6,13 @@ const { PRIVATE_KEY, SKYDAX_ENV } = process.env;
 
 require('./startup/config')(PRIVATE_KEY);
 require('./startup/favicon')(app);
-require('./models/index')(); // Model Schema
 require('./startup/errors')(app);
 require('./startup/routes')(app);
 
+require('./models/index')();
+require('./jobs/index')();
+
 if (SKYDAX_ENV === 'production') {
-  require('./startup/jobs')();
   require('./startup/prod')(app);
 }
 const port = process.env.PORT || 8080;

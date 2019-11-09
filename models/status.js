@@ -1,10 +1,11 @@
 const pool = require('../db/skydax');
+const data = require('../data/status.json');
 
 const StatusModel = {
   async schema() {
     const schema = `
       id SERIAL PRIMARY KEY,
-      name TEXT
+      name TEXT UNIQUE
     `;
     try {
       await pool.query(`CREATE TABLE IF NOT EXISTS status(${schema});`);
@@ -19,6 +20,20 @@ const StatusModel = {
     try {
       const res = await pool.query(sql.select);
       return res.rows;
+    } catch (err) {
+      throw new Error(err.detail);
+    }
+  },
+  async insertStatus() {
+    const sql = {
+      insert: `INSERT INTO status 
+      (name)
+      VALUES($1)
+      ON CONFLICT(name) 
+      DO NOTHING`,
+    };
+    try {
+      data.forEach(status => pool.query(sql.insert, status));
     } catch (err) {
       throw new Error(err.detail);
     }

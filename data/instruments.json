@@ -1,0 +1,52 @@
+[
+    [
+        "USD",
+        "US Dollar",
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        "BTC",
+        "Bitcoin",
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        "ETH",
+        "Ethereum",
+        true,
+        true,
+        true,
+        true
+        
+    ],
+    [
+        "LTC",
+        "Litecoin",
+        true,
+        true,
+        true,
+        true
+    ],
+    [
+        "XBT",
+        "Bitcoin",
+        false,
+        false,
+        true,
+        false
+    ]
+    ,
+    [
+        ".BXBT",
+        "Bitcoin Spot",
+        false,
+        false,
+        true,
+        false
+    ]
+]
