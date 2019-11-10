@@ -12,6 +12,7 @@ const StrategyModel = require('./strategies');
 const StrategyQueueModel = require('./strategy_queue');
 const OrderTypeModel = require('./order_types');
 const OrderModel = require('./orders');
+const CompositeModel = require('./composites');
 const WalletModel = require('./wallets');
 
 module.exports = async function() {
@@ -34,6 +35,7 @@ module.exports = async function() {
     await OrderTypeModel.schema();
     await OrderModel.schema();
     await WalletModel.schema();
+    await CompositeModel.schema();
 
     // Insert lookups
     await ExchangeModel.insertExchanges();

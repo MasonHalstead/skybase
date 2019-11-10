@@ -10,6 +10,9 @@ module.exports = async function() {
     await BitmexEmitter.emit('candle_m1', { dates, pair: 'XBTUSD' });
     await BitmexEmitter.emit('candle_m1', { dates, pair: 'ETHUSD' });
 
+    await BitmexEmitter.emit('composites', { dates, instrument: '.BXBT' });
+    await BitmexEmitter.emit('composites_m1', { dates, instrument: '.BXBT' });
+
     if (dates.minutes % 5 === 0) {
       await BitmexEmitter.emit('candle_m5', { dates, pair: 'XBTUSD' });
       await BitmexEmitter.emit('candle_m5', { dates, pair: 'ETHUSD' });
@@ -25,8 +28,8 @@ module.exports = async function() {
       await BitmexEmitter.emit('candle_d1', { dates, pair: 'ETHUSD' });
     }
   });
-  const historic_job = cron.schedule('0-59/3 * * * * *', async () => {
-    // const dates = helpers.handleDates(moment());
-    // await BitmexEmitter.emit('historic_eth', { dates, historic_job });
-  });
+  // const historic_job = cron.schedule('0-59/3 * * * * *', async () => {
+  // const dates = helpers.handleDates(moment());
+  // await BitmexEmitter.emit('historic_bxbt', { dates, historic_job });
+  // });
 };

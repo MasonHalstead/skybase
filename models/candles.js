@@ -60,6 +60,42 @@ const CandleModel = {
       throw new Error(err.detail);
     }
   },
+  async selectCandles({ database, interval, pair, start_date, end_date }) {
+    const tables = {
+      M1: 'candles_m1',
+      M5: 'candles_m5',
+      H1: 'candles_h1',
+      D1: 'candles_d1',
+    };
+    const sql = {
+      select: `SELECT * FROM ${tables[interval]}
+      WHERE pair = $1
+      AND date_time >= $2
+      AND date_time <= $3
+      LIMIT 5000;`,
+    };
+    try {
+      if (database === 'bitmex') {
+        res = await pool_bitmex.query(sql.select, [pair, start_date, end_date]);
+        return res.rows;
+      }
+      if (database === 'kraken') {
+        res = await pool_kraken.query(sql.select, [pair, start_date, end_date]);
+        return res.rows;
+      }
+      if (database === 'binance') {
+        res = await pool_binance.query(sql.select, [
+          pair,
+          start_date,
+          end_date,
+        ]);
+        return res.rows;
+      }
+      throw new Error('Invalid database candle query');
+    } catch (err) {
+      throw new Error('Select candle error');
+    }
+  },
   async aggregateCandles({ pair, from, into, truncate, start_date, end_date }) {
     const sql = {
       insert: `INSERT INTO ${into}(pair, date_time, open, high, low, close, volume)
@@ -71,7 +107,8 @@ const CandleModel = {
         (ARRAY_AGG(close ORDER BY date_time DESC))[1] as last_close,
         SUM(volume) as sum_volume
         FROM ${from}
-        WHERE pair = '${pair}' AND date_time between '${start_date}' and '${end_date}'
+        WHERE (pair = '${pair}') 
+        AND (date_time between '${start_date}' and '${end_date}')
         GROUP BY pair, composite_date_time
         ON CONFLICT DO NOTHING;
       `,

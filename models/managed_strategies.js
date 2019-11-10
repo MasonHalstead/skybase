@@ -30,9 +30,9 @@ const ManagedStrategyModel = {
       throw new Error('Managed strategy table schema error');
     }
   },
-  async selectUserStrategies(uuid) {
+  async selectStrategies(uuid) {
     const sql = {
-      select: 'SELECT * FROM managed_strategies WHERE customer_id = $1 LIMIT 1',
+      select: 'SELECT * FROM managed_strategies',
     };
     try {
       const res = await pool.query(sql.select, [uuid]);
