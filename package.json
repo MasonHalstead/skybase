@@ -38,6 +38,7 @@
     "helmet": "^3.21.2",
     "http": "0.0.0",
     "jsonwebtoken": "^8.5.1",
+    "memory-cache": "^0.2.0",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "node-cron": "^2.0.3",

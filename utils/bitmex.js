@@ -35,42 +35,14 @@ const requestOptionsBitmex = async req => {
   };
 };
 
-const isolate = options => {
-  const { verb, route, symbol, enabled } = options;
-  if (!verb || !route || !symbol) {
-    throw new Error('Invalid position isolate update');
-  }
-  return {
-    verb,
-    route,
-    symbol,
-    enabled,
-  };
-};
-
 const leverage = options => {
-  const { verb, route, symbol, leverage } = options;
-  if (!verb || !route || !symbol || !leverage) {
-    throw new Error('Invalid position isolate update');
+  const { symbol, leverage } = options;
+  if (!symbol || !leverage) {
+    throw new Error('Invalid position leverage update');
   }
   return {
-    verb,
-    route,
     symbol,
     leverage,
-  };
-};
-
-const riskLimit = options => {
-  const { verb, route, symbol, risk_limit } = options;
-  if (!verb || !route || !symbol || !risk_limit) {
-    throw new Error('Invalid position isolate update');
-  }
-  return {
-    verb,
-    route,
-    symbol,
-    riskLimit: risk_limit,
   };
 };
 
@@ -203,8 +175,14 @@ const ordersUpdate = options => {
     pegOffsetValue: peg_offset_value,
   };
 };
-const handleRequest = async ({ verb, route, bitmex_key, bitmex_secret }) => {
-  const data = JSON.stringify({});
+const handleRequest = async ({
+  verb,
+  route,
+  bitmex_key,
+  bitmex_secret,
+  payload = {},
+}) => {
+  const data = JSON.stringify(payload);
   const request_options = await requestOptionsBitmex({
     verb,
     route,
@@ -264,9 +242,7 @@ const handleCandles = async ({
 };
 
 module.exports = {
-  isolate,
   leverage,
-  riskLimit,
   ordersUpdate,
   ordersLimit,
   ordersMarket,

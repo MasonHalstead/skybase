@@ -13,6 +13,7 @@ const managed_strategies = require('./managed_strategies');
 const activity = require('./activity');
 const status = require('./status');
 const pairs = require('./pairs');
+const bitmex = require('./bitmex/index');
 const auth = require('./auth');
 
 router.use('/docs', docs);
@@ -20,6 +21,7 @@ router.use('/auth', auth);
 router.use('/strategies', strategies);
 router.use('/candles', candles);
 router.use('/users', users);
+router.use('/bitmex', bitmex);
 router.use('/wallets', wallets);
 router.use('/exchanges', exchanges);
 router.use('/intervals', intervals);

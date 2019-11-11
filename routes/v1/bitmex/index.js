@@ -1,23 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const orders = require('./orders');
-const status = require('./status');
-const price = require('./price');
 const candles = require('./candles');
 const funding = require('./funding');
-const wallet = require('./wallet');
-const composites = require('./composites');
 const instruments = require('./instruments');
+const trades = require('./trades');
 const positions = require('./positions');
+const wallet = require('./wallet');
 
-router.use('/orders', orders);
-router.use('/status', status);
-router.use('/price', price);
-router.use('/wallet', wallet);
-router.use('/instruments', instruments);
 router.use('/candles', candles);
-router.use('/composites', composites);
 router.use('/funding', funding);
+router.use('/instruments', instruments);
 router.use('/positions', positions);
+router.use('/trades', trades);
+router.use('/wallet', wallet);
 
 module.exports = router;
