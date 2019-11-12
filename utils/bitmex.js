@@ -47,23 +47,12 @@ const leverage = options => {
 };
 
 const ordersStop = options => {
-  const {
-    verb,
-    route,
-    type,
-    symbol,
-    side,
-    qty,
-    stop_px,
-    execution_instructions,
-  } = options;
-  if (!verb || !route || !type || !symbol || !qty || !stop_px) {
+  const { symbol, side, qty, stop_px, execution_instructions } = options;
+  if (!symbol || !qty || !stop_px) {
     throw new Error('Invalid stop order');
   }
   return {
-    verb,
-    route,
-    ordType: type,
+    ordType: 'Stop',
     symbol,
     orderQty: qty,
     side,
@@ -73,23 +62,12 @@ const ordersStop = options => {
 };
 
 const ordersStopLimit = options => {
-  const {
-    verb,
-    route,
-    type,
-    symbol,
-    qty,
-    stop_px,
-    price,
-    execution_instructions,
-  } = options;
-  if (!verb || !route || !type || !symbol || !qty || !stop_px || !price) {
+  const { symbol, qty, stop_px, price, execution_instructions } = options;
+  if (!symbol || !qty || !stop_px || !price) {
     throw new Error('Invalid stop limit order');
   }
   return {
-    verb,
-    route,
-    ordType: type,
+    ordType: 'StopLimit',
     symbol,
     orderQty: qty,
     price,
@@ -99,23 +77,12 @@ const ordersStopLimit = options => {
 };
 
 const ordersMarket = options => {
-  const {
-    verb,
-    route,
-    type,
-    symbol,
-    qty,
-    side,
-    display_qty,
-    execution_instructions,
-  } = options;
-  if (!verb || !route || !type || !symbol || !qty) {
+  const { symbol, qty, side, display_qty, execution_instructions } = options;
+  if (!symbol || !qty) {
     throw new Error('Invalid market order');
   }
   return {
-    verb,
-    route,
-    ordType: type,
+    ordType: 'Market',
     symbol,
     orderQty: qty,
     side,
@@ -125,22 +92,12 @@ const ordersMarket = options => {
 };
 
 const ordersLimit = options => {
-  const {
-    verb,
-    route,
-    type,
-    symbol,
-    qty,
-    price,
-    execution_instructions,
-  } = options;
-  if (!verb || !route || !type || !symbol || !qty || !price) {
+  const { symbol, qty, price, execution_instructions } = options;
+  if (!symbol || !qty || !price) {
     throw new Error('Invalid limit order');
   }
   return {
-    verb,
-    route,
-    ordType: type,
+    ordType: 'Limit',
     symbol,
     orderQty: qty,
     price,

@@ -1,0 +1,292 @@
+const express = require('express');
+const auth = require('../../../middleware/auth');
+const router = express.Router();
+const BitmexService = require('../../../services/bitmex');
+/**
+ * @swagger
+ * definitions:
+ *   Bitmex:
+ *     type: object
+ */
+
+/**
+ * @swagger
+ * /bitmex/orders:
+ *   get:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /bitmex/orders
+ *     tags:
+ *       - Bitmex
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         schema:
+ *          type: array
+ *          items:
+ *            type: object
+ *            $ref: '#/definitions/Bitmex'
+ */
+
+router.get('/', auth, async (req, res) => {
+  const { uuid } = req.user;
+  try {
+    const orders = await BitmexService.selectOrders(uuid);
+    res.send(orders);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /bitmex/orders/limit:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /bitmex/orders/limit
+ *     tags:
+ *       - Bitmex
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              symbol:
+ *                type: string
+ *              qty:
+ *                type: number
+ *              price:
+ *                type: number
+ *              execution_instructions:
+ *                type: string
+ *     responses:
+ *       200:
+ *         schema:
+ *          type: object
+ *          properties:
+ *            skydax:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ *            bitmex:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ */
+
+router.post('/limit', auth, async (req, res) => {
+  const { uuid } = req.user;
+  try {
+    const order = await BitmexService.createLimitOrders({
+      uuid,
+      payload: req.body,
+    });
+    res.send(order);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /bitmex/orders/market:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /bitmex/orders/market
+ *     tags:
+ *       - Bitmex
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              symbol:
+ *                type: string
+ *              qty:
+ *                type: number
+ *              execution_instructions:
+ *                type: string
+ *     responses:
+ *       200:
+ *         schema:
+ *          type: object
+ *          properties:
+ *            skydax:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ *            bitmex:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ */
+
+router.post('/market', auth, async (req, res) => {
+  const { uuid } = req.user;
+  try {
+    const order = await BitmexService.createMarketOrders({
+      uuid,
+      payload: req.body,
+    });
+    res.send(order);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /bitmex/orders/stop:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /bitmex/orders/stop
+ *     tags:
+ *       - Bitmex
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              symbol:
+ *                type: string
+ *              qty:
+ *                type: number
+ *              side:
+ *                type: string
+ *              stop_px:
+ *                type: number
+ *              execution_instructions:
+ *                type: string
+ *     responses:
+ *       200:
+ *         schema:
+ *          type: object
+ *          properties:
+ *            skydax:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ *            bitmex:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ */
+
+router.post('/stop', auth, async (req, res) => {
+  const { uuid } = req.user;
+  try {
+    const order = await BitmexService.createStopOrders({
+      uuid,
+      payload: req.body,
+    });
+    res.send(order);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /bitmex/stop-limit:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /bitmex/orders/stop-limit
+ *     tags:
+ *       - Bitmex
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              symbol:
+ *                type: string
+ *              qty:
+ *                type: number
+ *              side:
+ *                type: string
+ *              price:
+ *                type: number
+ *              stop_px:
+ *                type: number
+ *              execution_instructions:
+ *                type: string
+ *     responses:
+ *       200:
+ *         schema:
+ *          type: object
+ *          properties:
+ *            skydax:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ *            bitmex:
+ *              type: array
+ *              items:
+ *                type: object
+ *                $ref: '#/definitions/Bitmex'
+ */
+
+router.post('/stop-limit', auth, async (req, res) => {
+  const { uuid } = req.user;
+  try {
+    const order = await BitmexService.createStopLimitOrders({
+      uuid,
+      payload: req.body,
+    });
+    res.send(order);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+  // const { uuid } = req.user;
+  // const options = {
+  //   verb: 'POST',
+  //   route: '/api/v1/order',
+  //   type: 'StopLimit',
+  //   ...req.body,
+  // };
+  // try {
+  //   const options_valid = await bitmex.ordersStopLimitBitmex(options);
+  //   const user = await models.Users.selectDecryptedUser({ uuid });
+  //   const request_options = await bitmex.optionsBitmex(user, options_valid);
+  //   const results = await request(request_options);
+  //   const results_json = await JSON.parse(results);
+  //   const order = await models.Orders.createOrderBitmex(results_json, uuid);
+  //   await orders.sendBitmexText(user, order);
+  //   res.send({
+  //     bitmex: results_json,
+  //     skydax: order,
+  //   });
+  // } catch (err) {
+  //   res.status(401).send(err.message);
+  // }
+});
+
+module.exports = router;

@@ -5,8 +5,10 @@ const funding = require('./funding');
 const instruments = require('./instruments');
 const trades = require('./trades');
 const positions = require('./positions');
+const orders = require('./orders');
 const wallet = require('./wallet');
 
+router.use('/orders', orders);
 router.use('/candles', candles);
 router.use('/funding', funding);
 router.use('/instruments', instruments);

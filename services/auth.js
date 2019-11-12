@@ -15,6 +15,13 @@ const AuthService = {
     });
     return user.token;
   },
+  async authBitmex(uuid) {
+    const user = await UserModel.selectUser(uuid, false);
+    if (!user.bitmex_key || !user.bitmex_secret) {
+      throw new Error('Invalid Bitmex API credentials');
+    }
+    return user;
+  },
 };
 
 module.exports = AuthService;

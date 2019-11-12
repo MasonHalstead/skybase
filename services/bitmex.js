@@ -1,20 +1,17 @@
-const UserModel = require('../models/users');
 const BitmexUtils = require('../utils/bitmex');
-const ActivityModel = require('../models/activity');
+const AuthService = require('./auth');
+const PairModel = require('../models/pairs');
+const OrderService = require('./orders');
+const ActivityService = require('./activity');
 
 const BitmexService = {
   async selectCandles({ uuid, pair, payload }) {
-    let { count, interval, start_date, end_date } = payload;
+    const user = await AuthService.authBitmex(uuid);
 
+    let { count, interval, start_date, end_date } = payload;
     count = count || 1000;
     interval = interval || '1m';
     start_date = start_date || '1970-01-01T00:00:00Z';
-
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
 
     const candles = await BitmexUtils.handleRequest({
       verb: 'GET',
@@ -26,15 +23,10 @@ const BitmexService = {
     return candles;
   },
   async selectFunding({ uuid, pair, payload }) {
+    const user = await AuthService.authBitmex(uuid);
+
     let { count } = payload;
-
     count = count || 1;
-
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
 
     const funding = await BitmexUtils.handleRequest({
       verb: 'GET',
@@ -46,11 +38,7 @@ const BitmexService = {
     return funding;
   },
   async selectInstrument({ uuid, instrument }) {
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
+    const user = await AuthService.authBitmex(uuid);
 
     const instruments = await BitmexUtils.handleRequest({
       verb: 'GET',
@@ -61,13 +49,10 @@ const BitmexService = {
     return instruments[0] || {};
   },
   async selectTrades({ uuid, pair, payload }) {
-    let { count } = payload;
-    const user = await UserModel.selectUser(uuid, false);
+    const user = await AuthService.authBitmex(uuid);
 
+    let { count } = payload;
     count = count || 100;
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
 
     const price = await BitmexUtils.handleRequest({
       verb: 'GET',
@@ -76,13 +61,77 @@ const BitmexService = {
     });
     return price;
   },
+  async createLimitOrders({ uuid, payload }) {
+    const { symbol } = payload;
+    const user = await AuthService.authBitmex(uuid);
+    const pair = await PairModel.selectPair(symbol);
+    const post_data = await BitmexUtils.ordersLimit(payload);
+    const limit = await BitmexUtils.handleRequest({
+      verb: 'POST',
+      route: '/api/v1/order',
+      payload: post_data,
+      ...user,
+    });
+    const order = await OrderService.bitmexLimitOrder({ user, limit, pair });
+    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    return order;
+  },
+  async createMarketOrders({ uuid, payload }) {
+    const { symbol } = payload;
+    const user = await AuthService.authBitmex(uuid);
+    const pair = await PairModel.selectPair(symbol);
+    const post_data = await BitmexUtils.ordersMarket(payload);
+    const market = await BitmexUtils.handleRequest({
+      verb: 'POST',
+      route: '/api/v1/order',
+      payload: post_data,
+      ...user,
+    });
+    const order = await OrderService.bitmexMarketOrder({ user, market, pair });
+    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    return order;
+  },
+  async createStopOrders({ uuid, payload }) {
+    const { symbol } = payload;
+    const user = await AuthService.authBitmex(uuid);
+    const pair = await PairModel.selectPair(symbol);
+    const post_data = await BitmexUtils.ordersStop(payload);
+    const stop = await BitmexUtils.handleRequest({
+      verb: 'POST',
+      route: '/api/v1/order',
+      payload: post_data,
+      ...user,
+    });
+    const order = await OrderService.bitmexStopOrder({ user, stop, pair });
+    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    return order;
+  },
+  async createStopLimitOrders({ uuid, payload }) {
+    const { symbol } = payload;
+    const user = await AuthService.authBitmex(uuid);
+    const pair = await PairModel.selectPair(symbol);
+    const post_data = await BitmexUtils.ordersStopLimit(payload);
+    const stop = await BitmexUtils.handleRequest({
+      verb: 'POST',
+      route: '/api/v1/order',
+      payload: post_data,
+      ...user,
+    });
+    const order = await OrderService.bitmexStopOrder({ user, stop, pair });
+    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    return order;
+  },
+  async selectOrders(uuid) {
+    const user = await AuthService.authBitmex(uuid);
+    const orders = await BitmexUtils.handleRequest({
+      verb: 'GET',
+      route: '/api/v1/order',
+      ...user,
+    });
+    return orders;
+  },
   async selectPositions(uuid) {
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
-
+    const user = await AuthService.authBitmex(uuid);
     const positions = await BitmexUtils.handleRequest({
       verb: 'GET',
       route: '/api/v1/position',
@@ -91,12 +140,7 @@ const BitmexService = {
     return positions;
   },
   async selectPosition({ uuid, pair }) {
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
-
+    const user = await AuthService.authBitmex(uuid);
     const positions = await BitmexUtils.handleRequest({
       verb: 'GET',
       route: encodeURI(`/api/v1/position?filter={"symbol":"${pair}"}`),
@@ -105,11 +149,7 @@ const BitmexService = {
     return positions[0] || {};
   },
   async updateLeverage({ uuid, payload }) {
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
+    const user = await AuthService.authBitmex(uuid);
     const data = BitmexUtils.leverage(payload);
     const leverage = await BitmexUtils.handleRequest({
       verb: 'POST',
@@ -117,22 +157,11 @@ const BitmexService = {
       payload: data,
       ...user,
     });
-    await ActivityModel.createActivy({
-      uuid: user.uuid,
-      message: `Set ${leverage.symbol} leverage to ${leverage.leverage}`,
-      reference_table: null,
-      reference_column: null,
-      reference_id: null,
-    });
+    await ActivityService.activityLeverage({ user, leverage });
     return leverage;
   },
   async selectWallet(uuid) {
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
-
+    const user = await AuthService.authBitmex(uuid);
     const wallet = await BitmexUtils.handleRequest({
       verb: 'GET',
       route: '/api/v1/user/margin',
@@ -142,12 +171,7 @@ const BitmexService = {
     return wallet;
   },
   async selectWalletHistory(uuid) {
-    const user = await UserModel.selectUser(uuid, false);
-
-    if (!user.bitmex_key || !user.bitmex_secret) {
-      throw new Error('Invalid Bitmex API credentials');
-    }
-
+    const user = await AuthService.authBitmex(uuid);
     const wallets = await BitmexUtils.handleRequest({
       verb: 'GET',
       route: '/api/v1/user/walletHistory',

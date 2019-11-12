@@ -1,5 +1,5 @@
 const UserModel = require('../models/users');
-const ActivityModel = require('../models/activity');
+const ActivityService = require('../services/activity');
 const UserUtils = require('../utils/users');
 const EmailEmitter = require('../subscribers/email');
 const TextEmitter = require('../subscribers/text_message');
@@ -23,13 +23,7 @@ const UserService = {
       email_address,
       temporary_password,
     });
-    await ActivityModel.createActivy({
-      uuid: user.uuid,
-      message: `Sent password reset to ${email_address}`,
-      reference_table: null,
-      reference_column: null,
-      reference_id: null,
-    });
+    await ActivityService.activityResetUser({ user });
     return user.uuid;
   },
 };

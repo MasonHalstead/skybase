@@ -34,6 +34,20 @@ const PairModel = {
       throw new Error(err.detail);
     }
   },
+  async selectPair(combined_name) {
+    const sql = {
+      select: 'SELECT * FROM pairs WHERE combined_name = $1 LIMIT 1',
+    };
+    try {
+      const res = await pool.query(sql.select, [combined_name]);
+      if (!res.rows[0]) {
+        throw new Error('Pair does not exist');
+      }
+      return res.rows[0];
+    } catch (err) {
+      throw new Error(err.detail);
+    }
+  },
   async insertPairs() {
     const sql = {
       insert: `INSERT INTO pairs 

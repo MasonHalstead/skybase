@@ -31,6 +31,20 @@ const InstrumentModel = {
       throw new Error(err.detail);
     }
   },
+  async selectInstrument() {
+    const sql = {
+      select: 'SELECT * FROM instruments WHERE instrument = $1 LIMIT 1',
+    };
+    try {
+      const res = await pool.query(sql.select);
+      if (!res.rows[0]) {
+        throw new Error('Instrument does not exist');
+      }
+      return res.rows[0];
+    } catch (err) {
+      throw new Error(err.detail);
+    }
+  },
   async insertInstruments() {
     const sql = {
       insert: `INSERT INTO instruments 
