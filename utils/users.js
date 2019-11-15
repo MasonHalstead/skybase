@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const numbers = require('random-number');
 const letters = require('random-letters');
 const uuid = require('uuid');
