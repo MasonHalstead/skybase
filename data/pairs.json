@@ -20,5 +20,27 @@
         true,
         true,
         true
+    ],
+    [
+        "XXBT_ZUSD",
+        "XXBT/ZUSD",
+        "XXBTZUSD",
+        "XXBT",
+        "ZUSD",
+        false,
+        false,
+        false,
+        true
+    ],
+    [
+        "XETH_ZUSD",
+        "XETH/ZUSD",
+        "XETHZUSD",
+        "XETH",
+        "ZUSD",
+        false,
+        false,
+        false,
+        true
     ]
 ]

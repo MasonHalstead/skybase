@@ -200,3 +200,4 @@
 {"message":"::1 - - [12/Nov/2019:03:26:34 +0000] \"POST /v1/bitmex/orders/market HTTP/1.1\" 200 329 \"-\" \"PostmanRuntime/7.19.0\"\n","level":"info"}
 {"message":"::1 - - [12/Nov/2019:03:30:04 +0000] \"POST /v1/bitmex/orders/market HTTP/1.1\" 200 327 \"-\" \"PostmanRuntime/7.19.0\"\n","level":"info"}
 {"message":"::1 - - [12/Nov/2019:03:34:46 +0000] \"POST /v1/bitmex/orders/market HTTP/1.1\" 200 327 \"-\" \"PostmanRuntime/7.19.0\"\n","level":"info"}
+{"message":"::1 - - [12/Nov/2019:03:35:45 +0000] \"POST /v1/bitmex/orders/market HTTP/1.1\" 200 327 \"-\" \"PostmanRuntime/7.19.0\"\n","level":"info"}

@@ -40,26 +40,24 @@ BitmexEmitter.on('candle_m5', async ({ dates, pair }) => {
   await Candles.insertBitmexCandles(candles_m10, 'candles_m5');
 });
 
-BitmexEmitter.on('candle_h1', async ({ dates, pair }) => {
-  // Aggregates the last 60 minutes into 1 hour candles
-  await Candles.aggregateCandles({
-    pair,
-    from: 'candles_m1',
-    into: 'candles_h1',
-    truncate: 'HOUR',
-    start_date: dates.date_clone_h1,
+BitmexEmitter.on('composites', async ({ dates, instrument }) => {
+  // Collects the last 2 minutes 1m candles
+  const composites = await Bitmex.handleComposites({
+    instrument,
+    start_date: dates.date_clone_m2,
     end_date: dates.date_utc,
   });
+  Composites.insertBitmexComposite(composites, 'composites');
 });
 
-BitmexEmitter.on('candle_d1', async ({ dates, pair }) => {
-  // Aggregates the last 60 minutes into 1 hour candles
-  await Candles.aggregateCandles({
-    pair,
-    from: 'candles_m1',
-    into: 'candles_h1',
-    truncate: 'HOUR',
-    start_date: dates.date_clone_h1,
+BitmexEmitter.on('composites_m1', async ({ dates, instrument }) => {
+  // Aggregates the last 60 seconds into 1 minute composites
+  await Composites.aggregateComposites({
+    instrument,
+    from: 'composites',
+    into: 'composites_m1',
+    truncate: 'MINUTE',
+    start_date: dates.date_clone_m2,
     end_date: dates.date_utc,
   });
 });
@@ -100,28 +98,6 @@ BitmexEmitter.on('historic_eth', async ({ dates, historic_job }) => {
     .utc()
     .add(1000, 'minutes')
     .format();
-});
-
-BitmexEmitter.on('composites', async ({ dates, instrument }) => {
-  // Collects the last 2 minutes 1m candles
-  const composites = await Bitmex.handleComposites({
-    instrument,
-    start_date: dates.date_clone_m2,
-    end_date: dates.date_utc,
-  });
-  Composites.insertBitmexComposite(composites, 'composites');
-});
-
-BitmexEmitter.on('composites_m1', async ({ dates, instrument }) => {
-  // Aggregates the last 60 seconds into 1 minute composites
-  await Composites.aggregateComposites({
-    instrument,
-    from: 'composites',
-    into: 'composites_m1',
-    truncate: 'MINUTE',
-    start_date: dates.date_clone_m2,
-    end_date: dates.date_utc,
-  });
 });
 
 BitmexEmitter.on('historic_bxbt', async ({ dates, historic_job }) => {

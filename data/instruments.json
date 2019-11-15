@@ -49,4 +49,31 @@
         true,
         false
     ]
+    ,
+    [
+        "XETH",
+        "Ethereum",
+        false,
+        false,
+        false,
+        true
+    ]
+    ,
+    [
+        "XXBT",
+        "Bitcoin",
+        false,
+        false,
+        false,
+        true
+    ]
+    ,
+    [
+        "ZUSD",
+        "US Dollar",
+        false,
+        false,
+        false,
+        true
+    ]
 ]

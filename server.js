@@ -16,7 +16,6 @@ if (SKYDAX_ENV === 'production') {
   require('./startup/prod')(app);
 }
 const port = process.env.PORT || 8080;
-
 server.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on port ${port}...`);

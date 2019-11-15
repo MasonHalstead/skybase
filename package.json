@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "env-cmd -f .env nodemon node server.js",
+    "start:prod": "env-cmd -f .env_prod node server.js",
     "lint": "eslint -c .eslintrc.js --ext js,jsx",
     "test": "test"
   },
@@ -44,6 +45,7 @@
     "node-cron": "^2.0.3",
     "nodemailer": "^6.3.1",
     "pg": "^7.12.1",
+    "qs": "^6.9.1",
     "random-letters": "^1.0.0-rc.1",
     "random-number": "0.0.9",
     "request-promise": "^4.2.5",

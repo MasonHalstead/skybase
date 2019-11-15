@@ -1,6 +1,7 @@
 const pool_kraken = require('../db/kraken');
 const pool_bitmex = require('../db/bitmex');
 const pool_binance = require('../db/binance');
+const moment = require('moment');
 
 const CandleModel = {
   async schema() {
@@ -34,6 +35,30 @@ const CandleModel = {
       });
     } catch (err) {
       throw new Error('Candle table schema error');
+    }
+  },
+  async insertKrakenCandles(candles, pair, table) {
+    const sql = {
+      insert: `INSERT INTO ${table} 
+      (pair, date_time, open, high, low, close, volume)
+      VALUES($1, $2, $3, $4, $5, $6, $7)
+      ON CONFLICT DO NOTHING`,
+    };
+    try {
+      candles.forEach(candle => {
+        const [date_time, open, high, low, close, , volume] = candle;
+        pool_kraken.query(sql.insert, [
+          pair,
+          moment.unix(date_time).format(),
+          open || 0,
+          high || 0,
+          low || 0,
+          close || 0,
+          volume * 100000000 || 0,
+        ]);
+      });
+    } catch (err) {
+      throw new Error(err.detail);
     }
   },
   async insertBitmexCandles(candles, table) {

@@ -18,7 +18,7 @@ const handleDates = moment => {
     date_now,
     minutes,
     hours,
-    date_utc: date_utc.format(),
+    date_utc: date_utc.format(), // mutated by date_normalized
     date_clone_m1: date_clone_m1.subtract(1, 'minutes').format(),
     date_clone_m2: date_clone_m2.subtract(2, 'minutes').format(),
     date_clone_m5: date_clone_m5.subtract(5, 'minutes').format(),
