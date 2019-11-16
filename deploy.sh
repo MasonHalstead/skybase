@@ -7,5 +7,11 @@ PACKAGE_VERSION=$(grep -m 1 version package.json \
   | sed 's/[",]//g' \
   | tr -d '[[:space:]]')
 
+echo "${GREEN}DOCKER LOGIN${RESET}"
+docker login -u='skydax' -p='Krowdspace88!'
 echo "${GREEN}DOCKER CONTAINER $PACKAGE_VERSION BUILDING${RESET}"
-docker build -t skybase:1.0.0 .
+docker build --tag skydax/skybase .
+echo "${GREEN}DOCKER CONTAINER $PACKAGE_VERSION PUSH${RESET}"
+docker push skydax/skybase
+echo "${GREEN}DOCKER LOGOUT${RESET}"
+docker logout

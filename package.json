@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "start:dev": "env-cmd -f .env nodemon node server.js",
-    "start:prod": "env-cmd -f .env_prod node server.js",
+    "start:dev": "nodemon node server.js",
     "lint": "eslint -c .eslintrc.js --ext js,jsx",
     "test": "test"
   },
