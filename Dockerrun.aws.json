@@ -1,0 +1,15 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+      "Name": "skydax/skybase",
+      "Update": "true"
+    },
+    "Ports": [
+      {
+        "ContainerPort": "8080"
+      }
+    ],
+    "Logging": "/app/logs/skybase",
+    "Entrypoint": "/app/server.js",
+    "Command": "node server.js"
+  }
