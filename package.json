@@ -4,7 +4,8 @@
   "description": "Skydax API",
   "main": "server.js",
   "scripts": {
-    "start": "env-cmd -f .env nodemon node server.js",
+    "start": "node server.js",
+    "start:dev": "env-cmd -f .env nodemon node server.js",
     "start:prod": "env-cmd -f .env_prod node server.js",
     "lint": "eslint -c .eslintrc.js --ext js,jsx",
     "test": "test"
