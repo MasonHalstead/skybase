@@ -8,4 +8,4 @@ PACKAGE_VERSION=$(grep -m 1 version package.json \
   | tr -d '[[:space:]]')
 
 echo "${GREEN}DOCKER CONTAINER $PACKAGE_VERSION BUILDING${RESET}"
-docker build --tag skydax/skybase .
+docker build -t skybase:1.0.0 .

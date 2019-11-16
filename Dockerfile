@@ -1,7 +1,11 @@
-FROM node:alpine
-WORKDIR /app/src
-COPY package.json .
+FROM node:12.8.1
+
+WORKDIR /app
+
+COPY . /app
+
 RUN npm install
-COPY . .
+
 EXPOSE 8080
-CMD [ "npm", "start" ]
+
+CMD ["node", "server.js"]
