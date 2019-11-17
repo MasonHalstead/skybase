@@ -40,6 +40,6 @@ module.exports = async function() {
   });
   const historic_job = cron.schedule('0-59/3 * * * * *', async () => {
     const dates = helpers.handleDates(moment());
-    await BitmexEmitter.emit('historic_xbt', { dates, historic_job });
+    await BitmexEmitter.emit('historic_eth', { dates, historic_job });
   });
 };
