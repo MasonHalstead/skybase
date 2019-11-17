@@ -1,4 +1,4 @@
-const pool_bitmex = require('../db/bitmex');
+const pool = require('../db/skydax');
 
 const CompositeModel = {
   async schema() {
@@ -9,14 +9,14 @@ const CompositeModel = {
         PRIMARY KEY (instrument, date_time)
     `;
     try {
-      [pool_bitmex].forEach(pool => {
+      ['bitmex'].forEach(db => {
         pool.query(`
-            CREATE TABLE IF NOT EXISTS composites(${schema});
-            CREATE INDEX IF NOT EXISTS composites_idx ON composites (instrument, date_time);
+            CREATE TABLE IF NOT EXISTS ${db}_composites(${schema});
+            CREATE INDEX IF NOT EXISTS composites_idx ON ${db}_composites (instrument, date_time);
         `);
         pool.query(`
-            CREATE TABLE IF NOT EXISTS composites_m1(${schema});
-            CREATE INDEX IF NOT EXISTS composites_m1_idx ON composites_m1 (instrument, date_time);
+            CREATE TABLE IF NOT EXISTS ${db}_composites_m1(${schema});
+            CREATE INDEX IF NOT EXISTS composites_m1_idx ON ${db}_composites_m1 (instrument, date_time);
         `);
       });
     } catch (err) {
@@ -39,16 +39,10 @@ const CompositeModel = {
       throw new Error(err.detail);
     }
   },
-  async selectComposites({
-    database,
-    interval,
-    instrument,
-    start_date,
-    end_date,
-  }) {
+  async selectComposites({ db, interval, instrument, start_date, end_date }) {
     const tables = {
-      S5: 'composites',
-      M1: 'composites_m1',
+      S5: `${db}_composites`,
+      M1: `${db}_composites_m1`,
     };
     const sql = {
       select: `SELECT * FROM ${tables[interval]}
@@ -58,15 +52,8 @@ const CompositeModel = {
       LIMIT 5000;`,
     };
     try {
-      if (database === 'bitmex') {
-        res = await pool_bitmex.query(sql.select, [
-          instrument,
-          start_date,
-          end_date,
-        ]);
-        return res.rows;
-      }
-      throw new Error('Invalid database composite query');
+      res = await pool.query(sql.select, [instrument, start_date, end_date]);
+      return res.rows;
     } catch (err) {
       throw new Error('Select composite error');
     }
@@ -92,9 +79,7 @@ const CompositeModel = {
       `,
     };
     try {
-      [pool_bitmex].forEach(pool => {
-        pool.query(sql.insert);
-      });
+      pool.query(sql.insert);
     } catch (err) {
       throw new Error('candle aggregate error');
     }

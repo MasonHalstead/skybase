@@ -1,6 +1,4 @@
-const pool_kraken = require('../db/kraken');
-const pool_bitmex = require('../db/bitmex');
-const pool_binance = require('../db/binance');
+const pool = require('../db/skydax');
 const moment = require('moment');
 
 const CandleModel = {
@@ -16,22 +14,22 @@ const CandleModel = {
         PRIMARY KEY (pair, date_time)
     `;
     try {
-      [pool_kraken, pool_bitmex, pool_binance].forEach(pool => {
+      ['kraken', 'bitmex', 'binance'].forEach(db => {
         pool.query(`
-            CREATE TABLE IF NOT EXISTS candles_m1(${schema});
-            CREATE INDEX IF NOT EXISTS candles_m1_idx ON candles_m1 (pair, date_time);
+            CREATE TABLE IF NOT EXISTS ${db}_candles_m1(${schema});
+            CREATE INDEX IF NOT EXISTS candles_m1_idx ON ${db}_candles_m1 (pair, date_time);
         `);
         pool.query(`
-            CREATE TABLE IF NOT EXISTS candles_m5(${schema});
-            CREATE INDEX IF NOT EXISTS candles_m5_idx ON candles_m5 (pair, date_time);
+            CREATE TABLE IF NOT EXISTS ${db}_candles_m5(${schema});
+            CREATE INDEX IF NOT EXISTS candles_m5_idx ON ${db}_candles_m5 (pair, date_time);
         `);
         pool.query(`
-            CREATE TABLE IF NOT EXISTS candles_h1(${schema});
-            CREATE INDEX IF NOT EXISTS candles_h1_idx ON candles_h1 (pair, date_time);
+            CREATE TABLE IF NOT EXISTS ${db}_candles_h1(${schema});
+            CREATE INDEX IF NOT EXISTS candles_h1_idx ON ${db}_candles_h1 (pair, date_time);
         `);
         pool.query(`
-            CREATE TABLE IF NOT EXISTS candles_d1(${schema});
-            CREATE INDEX IF NOT EXISTS candles_d1_idx ON candles_d1 (pair, date_time);`);
+            CREATE TABLE IF NOT EXISTS ${db}_candles_d1(${schema});
+            CREATE INDEX IF NOT EXISTS candles_d1_idx ON ${db}_candles_d1 (pair, date_time);`);
       });
     } catch (err) {
       throw new Error('Candle table schema error');
@@ -47,7 +45,7 @@ const CandleModel = {
     try {
       candles.forEach(candle => {
         const [date_time, open, high, low, close, , volume] = candle;
-        pool_kraken.query(sql.insert, [
+        pool.query(sql.insert, [
           pair,
           moment.unix(date_time).format(),
           open || 0,
@@ -71,7 +69,7 @@ const CandleModel = {
     try {
       candles.forEach(candle => {
         const { symbol, timestamp, open, high, low, close, volume } = candle;
-        pool_bitmex.query(sql.insert, [
+        pool.query(sql.insert, [
           symbol,
           timestamp,
           open || 0,
@@ -85,12 +83,12 @@ const CandleModel = {
       throw new Error(err.detail);
     }
   },
-  async selectCandles({ database, interval, pair, start_date, end_date }) {
+  async selectCandles({ db, interval, pair, start_date, end_date }) {
     const tables = {
-      M1: 'candles_m1',
-      M5: 'candles_m5',
-      H1: 'candles_h1',
-      D1: 'candles_d1',
+      M1: `${db}_candles_m1`,
+      M5: `${db}_candles_m5`,
+      H1: `${db}_candles_h1`,
+      D1: `${db}_candles_d1`,
     };
     const sql = {
       select: `SELECT * FROM ${tables[interval]}
@@ -100,30 +98,23 @@ const CandleModel = {
       LIMIT 5000;`,
     };
     try {
-      if (database === 'bitmex') {
-        res = await pool_bitmex.query(sql.select, [pair, start_date, end_date]);
-        return res.rows;
-      }
-      if (database === 'kraken') {
-        res = await pool_kraken.query(sql.select, [pair, start_date, end_date]);
-        return res.rows;
-      }
-      if (database === 'binance') {
-        res = await pool_binance.query(sql.select, [
-          pair,
-          start_date,
-          end_date,
-        ]);
-        return res.rows;
-      }
-      throw new Error('Invalid database candle query');
+      res = await pool.query(sql.select, [pair, start_date, end_date]);
+      return res.rows;
     } catch (err) {
       throw new Error('Select candle error');
     }
   },
-  async aggregateCandles({ pair, from, into, truncate, start_date, end_date }) {
+  async aggregateCandles({
+    db,
+    pair,
+    from,
+    into,
+    truncate,
+    start_date,
+    end_date,
+  }) {
     const sql = {
-      insert: `INSERT INTO ${into}(pair, date_time, open, high, low, close, volume)
+      insert: `INSERT INTO ${db}_${into}(pair, date_time, open, high, low, close, volume)
         SELECT pair, 
         DATE_TRUNC('${truncate}', date_time) as composite_date_time,
         (ARRAY_AGG(open ORDER BY date_time ASC))[1] as first_open,
@@ -139,9 +130,7 @@ const CandleModel = {
       `,
     };
     try {
-      [pool_kraken, pool_bitmex, pool_binance].forEach(pool => {
-        pool.query(sql.insert);
-      });
+      pool.query(sql.insert);
     } catch (err) {
       throw new Error('candle hourly aggregate error');
     }

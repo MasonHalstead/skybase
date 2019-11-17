@@ -8,6 +8,9 @@
     "lint": "eslint -c .eslintrc.js --ext js,jsx",
     "test": "test"
   },
+  "engines": {
+    "node": "12.x"
+  },
   "author": "Mason Halstead",
   "license": "ISC",
   "eslintConfig": {

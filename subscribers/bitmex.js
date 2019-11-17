@@ -17,7 +17,7 @@ BitmexEmitter.on('candle_m1', async ({ dates, pair }) => {
     start_date: dates.date_clone_m2,
     end_date: dates.date_utc,
   });
-  Candles.insertBitmexCandles(candles, 'candles_m1');
+  Candles.insertBitmexCandles(candles, 'bitmex_candles_m1');
 });
 
 BitmexEmitter.on('candle_m5', async ({ dates, pair }) => {
@@ -28,7 +28,7 @@ BitmexEmitter.on('candle_m5', async ({ dates, pair }) => {
     start_date: dates.date_clone_m5,
     end_date: dates.date_utc,
   });
-  await Candles.insertBitmexCandles(candles_m1, 'candles_m1');
+  await Candles.insertBitmexCandles(candles_m1, 'bitmex_candles_m1');
 
   // Collects the last 10 minutes 5m candles
   const candles_m10 = await Bitmex.handleCandles({
@@ -37,7 +37,7 @@ BitmexEmitter.on('candle_m5', async ({ dates, pair }) => {
     start_date: dates.date_clone_m10,
     end_date: dates.date_utc,
   });
-  await Candles.insertBitmexCandles(candles_m10, 'candles_m5');
+  await Candles.insertBitmexCandles(candles_m10, 'bitmex_candles_m5');
 });
 
 BitmexEmitter.on('composites', async ({ dates, instrument }) => {
@@ -47,15 +47,15 @@ BitmexEmitter.on('composites', async ({ dates, instrument }) => {
     start_date: dates.date_clone_m2,
     end_date: dates.date_utc,
   });
-  Composites.insertBitmexComposite(composites, 'composites');
+  Composites.insertBitmexComposite(composites, 'bitmex_composites');
 });
 
 BitmexEmitter.on('composites_m1', async ({ dates, instrument }) => {
   // Aggregates the last 60 seconds into 1 minute composites
   await Composites.aggregateComposites({
     instrument,
-    from: 'composites',
-    into: 'composites_m1',
+    from: 'bitmex_composites',
+    into: 'bitmex_composites_m1',
     truncate: 'MINUTE',
     start_date: dates.date_clone_m2,
     end_date: dates.date_utc,
@@ -74,7 +74,7 @@ BitmexEmitter.on('historic_xbt', async ({ dates, historic_job }) => {
     end_date: dates.date_utc,
   });
 
-  await Candles.insertBitmexCandles(candles_m1, 'candles_m1');
+  await Candles.insertBitmexCandles(candles_m1, 'bitmex_candles_m1');
   historic_xbt_date = moment(historic_xbt_date)
     .utc()
     .add(1000, 'minutes')
@@ -93,7 +93,7 @@ BitmexEmitter.on('historic_eth', async ({ dates, historic_job }) => {
     end_date: dates.date_utc,
   });
 
-  await Candles.insertBitmexCandles(candles_m1, 'candles_m1');
+  await Candles.insertBitmexCandles(candles_m1, 'bitmex_candles_m1');
   historic_eth_date = moment(historic_eth_date)
     .utc()
     .add(1000, 'minutes')
@@ -110,7 +110,7 @@ BitmexEmitter.on('historic_bxbt', async ({ dates, historic_job }) => {
     start_date: historic_bxbt_date,
     end_date: dates.date_utc,
   });
-  await Composites.insertBitmexComposite(composites, 'composites');
+  await Composites.insertBitmexComposite(composites, 'bitmex_composites');
   historic_bxbt_date = moment(historic_bxbt_date)
     .utc()
     .add(40, 'minutes')
