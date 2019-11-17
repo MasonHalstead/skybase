@@ -104,17 +104,9 @@ const CandleModel = {
       throw new Error('Select candle error');
     }
   },
-  async aggregateCandles({
-    db,
-    pair,
-    from,
-    into,
-    truncate,
-    start_date,
-    end_date,
-  }) {
+  async aggregateCandles({ pair, from, into, truncate, start_date, end_date }) {
     const sql = {
-      insert: `INSERT INTO ${db}_${into}(pair, date_time, open, high, low, close, volume)
+      insert: `INSERT INTO ${into}(pair, date_time, open, high, low, close, volume)
         SELECT pair, 
         DATE_TRUNC('${truncate}', date_time) as composite_date_time,
         (ARRAY_AGG(open ORDER BY date_time ASC))[1] as first_open,
