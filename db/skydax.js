@@ -1,7 +1,11 @@
 const { Pool } = require('pg');
-const { SKYDAX_DATABASE_URL } = process.env;
+const { DATABASE_URL, SKYDAX_ENV } = process.env;
 
-let connection = `${SKYDAX_DATABASE_URL}`;
+let connection = `${DATABASE_URL}?ssl=true`;
+
+if (SKYDAX_ENV === 'development') {
+  connection = DATABASE_URL;
+}
 const pool = new Pool({ connectionString: connection });
 
 module.exports = {
