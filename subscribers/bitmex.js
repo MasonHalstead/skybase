@@ -68,12 +68,11 @@ BitmexEmitter.on('historic_xbt', async ({ dates, historic_job }) => {
   }
   console.log('XBTUSD', historic_xbt_date);
   const candles_m1 = await Bitmex.handleCandles({
-    instrument: 'XBTUSD',
+    pair: 'XBTUSD',
     interval: '1m',
     start_date: historic_xbt_date,
     end_date: dates.date_utc,
   });
-
   await Candles.insertBitmexCandles(candles_m1, 'bitmex_candles_m1');
   historic_xbt_date = moment(historic_xbt_date)
     .utc()
@@ -87,7 +86,7 @@ BitmexEmitter.on('historic_eth', async ({ dates, historic_job }) => {
   }
   console.log('ETHUSD', historic_eth_date);
   const candles_m1 = await Bitmex.handleCandles({
-    instrument: 'ETHUSD',
+    pair: 'ETHUSD',
     interval: '1m',
     start_date: historic_eth_date,
     end_date: dates.date_utc,
