@@ -33,7 +33,7 @@ const CompositeModel = {
     try {
       composites.forEach(composite => {
         const { symbol, timestamp, lastPrice } = composite;
-        pool_bitmex.query(sql.insert, [symbol, timestamp, lastPrice || 0]);
+        pool.query(sql.insert, [symbol, timestamp, lastPrice || 0]);
       });
     } catch (err) {
       throw new Error(err.detail);
