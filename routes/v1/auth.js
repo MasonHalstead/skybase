@@ -39,9 +39,52 @@ router.get('/token', auth, async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/bitmex:
+ *   get:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /auth/bitmex
+ *     tags:
+ *       - Auth
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         schema:
+ *          $ref: '#/definitions/Auth'
+ */
+
 router.get('/bitmex', auth, async (req, res) => {
   try {
     const token = await AuthService.verifyBitmex(req.user);
+    res.send(token);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /auth/kraken:
+ *   get:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /auth/kraken
+ *     tags:
+ *       - Auth
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         schema:
+ *          $ref: '#/definitions/Auth'
+ */
+
+router.get('/kraken', auth, async (req, res) => {
+  try {
+    const token = await AuthService.verifyKraken(req.user);
     res.send(token);
   } catch (err) {
     res.status(401).send(err.message);

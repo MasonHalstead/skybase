@@ -83,22 +83,33 @@ const CandleModel = {
       throw new Error(err.detail);
     }
   },
-  async selectCandles({ db, interval, pair, start_date, end_date }) {
+  async selectCandles({
+    exchange,
+    interval,
+    pair,
+    count = 1000,
+    start_date = '1970-01-01T00:00:00Z',
+    end_date = moment.utc().format(),
+  }) {
+    let limit = count;
     const tables = {
-      M1: `${db}_candles_m1`,
-      M5: `${db}_candles_m5`,
-      H1: `${db}_candles_h1`,
-      D1: `${db}_candles_d1`,
+      m1: `${exchange}_candles_m1`,
+      m5: `${exchange}_candles_m5`,
+      h1: `${exchange}_candles_h1`,
+      d1: `${exchange}_candles_d1`,
     };
+    if (limit > 5000) {
+      limit = 5000;
+    }
     const sql = {
       select: `SELECT * FROM ${tables[interval]}
       WHERE pair = $1
       AND date_time >= $2
       AND date_time <= $3
-      LIMIT 5000;`,
+      LIMIT $4;`,
     };
     try {
-      res = await pool.query(sql.select, [pair, start_date, end_date]);
+      res = await pool.query(sql.select, [pair, start_date, end_date, limit]);
       return res.rows;
     } catch (err) {
       throw new Error('Select candle error');

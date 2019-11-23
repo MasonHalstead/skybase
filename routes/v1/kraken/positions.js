@@ -1,6 +1,6 @@
 const express = require('express');
 const auth = require('../../../middleware/auth');
-const BitmexService = require('../../../services/bitmex');
+const KrakenService = require('../../../services/kraken');
 const router = express.Router();
 
 /**
@@ -12,24 +12,15 @@ const router = express.Router();
 
 /**
  * @swagger
- * /bitmex/funding/:pair:
+ * /bitmex/positions:
  *   get:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /bitmex/funding/:pair
+ *     summary: /bitmex/positions
  *     tags:
  *       - Bitmex
  *     produces:
  *       - application/json
- *     requestBody:
- *       required: true
- *       content:
- *         key=value:
- *          schema:
- *            type: object
- *            properties:
- *              count:
- *                type: number
  *     responses:
  *       200:
  *         schema:
@@ -39,16 +30,11 @@ const router = express.Router();
  *            $ref: '#/definitions/Bitmex'
  */
 
-router.get('/:pair', auth, async (req, res) => {
+router.get('/', auth, async (req, res) => {
   const { uuid } = req.user;
-  const { pair } = req.params;
   try {
-    const funding = await BitmexService.selectFunding({
-      uuid,
-      pair,
-      payload: req.body,
-    });
-    res.send(funding);
+    const positions = await KrakenService.selectPositions(uuid);
+    res.send(positions);
   } catch (err) {
     res.status(401).send(err.message);
   }

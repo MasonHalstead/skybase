@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * @swagger
  * /bitmex/trades/:pair:
- *   post:
+ *   get:
  *     security:
  *       - ApiKeyAuth: []
  *     summary: /bitmex/trades/:pair
@@ -39,7 +39,7 @@ const router = express.Router();
  *            $ref: '#/definitions/Bitmex'
  */
 
-router.post('/:pair', auth, async (req, res) => {
+router.get('/:pair', auth, async (req, res) => {
   const { uuid } = req.user;
   const { pair } = req.params;
   try {

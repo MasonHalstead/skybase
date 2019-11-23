@@ -181,21 +181,25 @@ const handleCandles = async ({
   end_date,
   count = 1000,
 }) => {
-  const options = {
-    verb: 'GET',
-    route: encodeURI(
-      `/api/v1/trade/bucketed?binSize=${interval}&symbol=${pair}&startTime=${start_date}&endTime=${end_date}&count=${count}`,
-    ),
-  };
-  const data = JSON.stringify({});
-  const request_options = await requestOptionsBitmex({
-    ...options,
-    data,
-    bitmex_key: BITMEX_KEY,
-    bitmex_secret: BITMEX_SECRET,
-  });
-  const results = await request(request_options);
-  return JSON.parse(results);
+  try {
+    const options = {
+      verb: 'GET',
+      route: encodeURI(
+        `/api/v1/trade/bucketed?binSize=${interval}&symbol=${pair}&startTime=${start_date}&endTime=${end_date}&count=${count}`,
+      ),
+    };
+    const data = JSON.stringify({});
+    const request_options = await requestOptionsBitmex({
+      ...options,
+      data,
+      bitmex_key: BITMEX_KEY,
+      bitmex_secret: BITMEX_SECRET,
+    });
+    const results = await request(request_options);
+    return JSON.parse(results);
+  } catch {
+    throw new Error('Error handling Bitmex request');
+  }
 };
 
 module.exports = {

@@ -14,6 +14,7 @@ const OrderTypeModel = require('./order_types');
 const OrderModel = require('./orders');
 const CompositeModel = require('./composites');
 const WalletModel = require('./wallets');
+const EquityModel = require('./equity');
 
 module.exports = async function() {
   try {
@@ -36,6 +37,7 @@ module.exports = async function() {
     await OrderModel.schema();
     await WalletModel.schema();
     await CompositeModel.schema();
+    await EquityModel.schema();
 
     // Insert lookups
     await ExchangeModel.insertExchanges();

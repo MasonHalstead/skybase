@@ -2,10 +2,21 @@ const ActivityModel = require('../models/activity');
 const TextEmitter = require('../subscribers/text_message');
 
 const ActivityService = {
-  async activityOrder(exchange, { user, order, pair }) {
+  async activityBitmexOrder({ user, order, pair }) {
     const activity = await ActivityModel.createActivy({
       uuid: user.uuid,
-      message: `${exchange} order ${order.exchange_order_status} ${order.quantity} ${pair.combined_name} at ${order.price}.`,
+      message: `BitMEX order ${order.exchange_order_status} ${order.quantity} ${pair.combined_name} at ${order.price}.`,
+      reference_table: 'orders',
+      reference_column: 'id',
+      reference_id: order.id,
+    });
+    TextEmitter.emit('order', { user, activity });
+    return activity;
+  },
+  async activityKrakenOrder({ user, order }) {
+    const activity = await ActivityModel.createActivy({
+      uuid: user.uuid,
+      message: `BitMEX order ${order.exchange_order_status} ${order.quantity} ${pair.combined_name} at ${order.price}.`,
       reference_table: 'orders',
       reference_column: 'id',
       reference_id: order.id,

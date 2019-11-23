@@ -6,8 +6,8 @@ const PairModel = {
     const schema = `
       id SERIAL PRIMARY KEY,
       name TEXT UNIQUE,
-      short_name TEXT,
-      combined_name TEXT,
+      short_name TEXT UNIQUE,
+      combined_name TEXT UNIQUE,
       base TEXT REFERENCES instruments (instrument),
       quote TEXT REFERENCES instruments (instrument),
       on_binance BOOLEAN DEFAULT TRUE,

@@ -1,23 +1,23 @@
 const express = require('express');
 const auth = require('../../../middleware/auth');
 const router = express.Router();
-const BitmexService = require('../../../services/bitmex');
+const KrakenService = require('../../../services/kraken');
 /**
  * @swagger
  * definitions:
- *   Bitmex:
+ *   Kraken:
  *     type: object
  */
 
 /**
  * @swagger
- * /bitmex/orders:
+ * /kraken/orders:
  *   get:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /bitmex/orders
+ *     summary: /kraken/orders
  *     tags:
- *       - Bitmex
+ *       - Kraken
  *     produces:
  *       - application/json
  *     responses:
@@ -26,13 +26,13 @@ const BitmexService = require('../../../services/bitmex');
  *          type: array
  *          items:
  *            type: object
- *            $ref: '#/definitions/Bitmex'
+ *            $ref: '#/definitions/Kraken'
  */
 
 router.get('/', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
-    const orders = await BitmexService.selectOrders(uuid);
+    const orders = await KrakenService.selectOrders(uuid);
     res.send(orders);
   } catch (err) {
     res.status(401).send(err.message);
@@ -41,13 +41,13 @@ router.get('/', auth, async (req, res) => {
 
 /**
  * @swagger
- * /bitmex/orders/limit:
+ * /kraken/orders/limit:
  *   post:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /bitmex/orders/limit
+ *     summary: /kraken/orders/limit
  *     tags:
- *       - Bitmex
+ *       - Kraken
  *     produces:
  *       - application/json
  *     requestBody:
@@ -57,14 +57,20 @@ router.get('/', auth, async (req, res) => {
  *          schema:
  *            type: object
  *            properties:
- *              symbol:
+ *              type:
  *                type: string
- *              qty:
- *                type: number
  *              price:
  *                type: number
- *              execution_instructions:
- *                type: string
+ *              trigger_price:
+ *                type: number
+ *              volume:
+ *                type: number
+ *              leverage:
+ *                type: number
+ *              start_date:
+ *                type: date
+ *              expires_date:
+ *                type: date
  *     responses:
  *       200:
  *         schema:
@@ -74,20 +80,21 @@ router.get('/', auth, async (req, res) => {
  *              type: array
  *              items:
  *                type: object
- *                $ref: '#/definitions/Bitmex'
- *            bitmex:
+ *                $ref: '#/definitions/Kraken'
+ *            kraken:
  *              type: array
  *              items:
  *                type: object
- *                $ref: '#/definitions/Bitmex'
+ *                $ref: '#/definitions/Kraken'
  */
 
 router.post('/limit', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
-    const order = await BitmexService.createLimitOrders({
+    const order = await KrakenService.createOrders({
       uuid,
-      payload: req.body,
+      order_type: 'limit',
+      ...req.body,
     });
     res.send(order);
   } catch (err) {
@@ -97,13 +104,13 @@ router.post('/limit', auth, async (req, res) => {
 
 /**
  * @swagger
- * /bitmex/orders/market:
+ * /kraken/market/limit:
  *   post:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /bitmex/orders/market
+ *     summary: /kraken/market/limit
  *     tags:
- *       - Bitmex
+ *       - Kraken
  *     produces:
  *       - application/json
  *     requestBody:
@@ -113,12 +120,20 @@ router.post('/limit', auth, async (req, res) => {
  *          schema:
  *            type: object
  *            properties:
- *              symbol:
+ *              type:
  *                type: string
- *              qty:
+ *              price:
  *                type: number
- *              execution_instructions:
- *                type: string
+ *              trigger_price:
+ *                type: number
+ *              volume:
+ *                type: number
+ *              leverage:
+ *                type: number
+ *              start_date:
+ *                type: date
+ *              expires_date:
+ *                type: date
  *     responses:
  *       200:
  *         schema:
@@ -128,20 +143,21 @@ router.post('/limit', auth, async (req, res) => {
  *              type: array
  *              items:
  *                type: object
- *                $ref: '#/definitions/Bitmex'
- *            bitmex:
+ *                $ref: '#/definitions/Kraken'
+ *            kraken:
  *              type: array
  *              items:
  *                type: object
- *                $ref: '#/definitions/Bitmex'
+ *                $ref: '#/definitions/Kraken'
  */
 
 router.post('/market', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
-    const order = await BitmexService.createMarketOrders({
+    const order = await KrakenService.createOrders({
       uuid,
-      payload: req.body,
+      order_type: 'market',
+      ...req.body,
     });
     res.send(order);
   } catch (err) {
@@ -151,13 +167,13 @@ router.post('/market', auth, async (req, res) => {
 
 /**
  * @swagger
- * /bitmex/orders/stop:
+ * /kraken/market/stop-loss:
  *   post:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /bitmex/orders/stop
+ *     summary: /kraken/market/stop-loss
  *     tags:
- *       - Bitmex
+ *       - Kraken
  *     produces:
  *       - application/json
  *     requestBody:
@@ -167,76 +183,20 @@ router.post('/market', auth, async (req, res) => {
  *          schema:
  *            type: object
  *            properties:
- *              symbol:
- *                type: string
- *              qty:
- *                type: number
- *              side:
- *                type: string
- *              stop_px:
- *                type: number
- *              execution_instructions:
- *                type: string
- *     responses:
- *       200:
- *         schema:
- *          type: object
- *          properties:
- *            skydax:
- *              type: array
- *              items:
- *                type: object
- *                $ref: '#/definitions/Bitmex'
- *            bitmex:
- *              type: array
- *              items:
- *                type: object
- *                $ref: '#/definitions/Bitmex'
- */
-
-router.post('/stop', auth, async (req, res) => {
-  const { uuid } = req.user;
-  try {
-    const order = await BitmexService.createStopOrders({
-      uuid,
-      payload: req.body,
-    });
-    res.send(order);
-  } catch (err) {
-    res.status(401).send(err.message);
-  }
-});
-
-/**
- * @swagger
- * /bitmex/stop-limit:
- *   post:
- *     security:
- *       - ApiKeyAuth: []
- *     summary: /bitmex/orders/stop-limit
- *     tags:
- *       - Bitmex
- *     produces:
- *       - application/json
- *     requestBody:
- *       required: true
- *       content:
- *         key=value:
- *          schema:
- *            type: object
- *            properties:
- *              symbol:
- *                type: string
- *              qty:
- *                type: number
- *              side:
+ *              type:
  *                type: string
  *              price:
  *                type: number
- *              stop_px:
+ *              trigger_price:
  *                type: number
- *              execution_instructions:
- *                type: string
+ *              volume:
+ *                type: number
+ *              leverage:
+ *                type: number
+ *              start_date:
+ *                type: date
+ *              expires_date:
+ *                type: date
  *     responses:
  *       200:
  *         schema:
@@ -246,20 +206,21 @@ router.post('/stop', auth, async (req, res) => {
  *              type: array
  *              items:
  *                type: object
- *                $ref: '#/definitions/Bitmex'
- *            bitmex:
+ *                $ref: '#/definitions/Kraken'
+ *            kraken:
  *              type: array
  *              items:
  *                type: object
- *                $ref: '#/definitions/Bitmex'
+ *                $ref: '#/definitions/Kraken'
  */
 
-router.post('/stop-limit', auth, async (req, res) => {
+router.post('/stop-loss', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
-    const order = await BitmexService.createStopLimitOrders({
+    const order = await KrakenService.createOrders({
       uuid,
-      payload: req.body,
+      order_type: 'stop-loss',
+      ...req.body,
     });
     res.send(order);
   } catch (err) {

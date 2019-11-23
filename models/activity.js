@@ -47,7 +47,7 @@ const ActivityModel = {
   },
   async selectUserActivity(uuid) {
     const sql = {
-      select: 'SELECT * FROM activity WHERE uuid = $1 LIMIT 1',
+      select: 'SELECT * FROM activity WHERE customer_id = $1 LIMIT 50',
     };
     try {
       const res = await pool.query(sql.select, [uuid]);

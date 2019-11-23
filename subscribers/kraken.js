@@ -1,18 +1,20 @@
 const EventEmitter = require('events');
 const KrakenEmitter = new EventEmitter();
 const moment = require('moment');
-const Kraken = require('../utils/kraken');
+const KrakenService = require('../services/kraken');
 const Candles = require('../models/candles');
 
 KrakenEmitter.on('candle_m1', async ({ dates, pair }) => {
   // Collects the last 2 minutes 1m candles
   try {
-    const unix_m2 = moment(dates.date_clone_m2).unix();
-    const candles = await Kraken.handleRequest({
-      route: `/0/public/OHLC?pair=${pair}&interval=1&since=${unix_m2}`,
+    const unix_m2 = await moment(dates.date_clone_m2).unix();
+    const candles = await KrakenService.selectJobCandles({
+      pair,
+      start_date: unix_m2,
+      interval: 1,
     });
-    Candles.insertKrakenCandles(candles[pair], pair, 'kraken_candles_m1');
-  } catch {
+    Candles.insertKrakenCandles(candles, pair, 'kraken_candles_m1');
+  } catch (err) {
     throw new Error('Error collecting Kraken candles');
   }
 });
@@ -20,22 +22,26 @@ KrakenEmitter.on('candle_m1', async ({ dates, pair }) => {
 KrakenEmitter.on('candle_m5', async ({ dates, pair }) => {
   // Collects the last 5 minutes 1m candles
   try {
-    const unix_m5 = moment(dates.date_clone_m5).unix();
-    const candles_m1 = await Kraken.handleRequest({
-      route: `/0/public/OHLC?pair=${pair}&interval=1&since=${unix_m5}`,
+    const unix_m5 = await moment(dates.date_clone_m5).unix();
+    const candles_m1 = await KrakenService.selectJobCandles({
+      pair,
+      start_date: unix_m5,
+      interval: 1,
     });
-    Candles.insertKrakenCandles(candles_m1[pair], pair, 'kraken_candles_m1');
+    Candles.insertKrakenCandles(candles_m1, pair, 'kraken_candles_m1');
   } catch {
     throw new Error('Error collecting Kraken candles');
   }
 
   // Collects the last 10 minutes 5m candles
   try {
-    const unix_m10 = moment(dates.date_clone_m10).unix();
-    const candles_m5 = await Kraken.handleRequest({
-      route: `/0/public/OHLC?pair=${pair}&interval=5&since=${unix_m10}`,
+    const unix_m10 = await moment(dates.date_clone_m10).unix();
+    const candles_m5 = await KrakenService.selectJobCandles({
+      pair,
+      start_date: unix_m10,
+      interval: 5,
     });
-    Candles.insertKrakenCandles(candles_m5[pair], pair, 'kraken_candles_m5');
+    Candles.insertKrakenCandles(candles_m5, pair, 'kraken_candles_m5');
   } catch {
     throw new Error('Error collecting Kraken candles');
   }

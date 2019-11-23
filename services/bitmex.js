@@ -3,16 +3,18 @@ const AuthService = require('./auth');
 const PairModel = require('../models/pairs');
 const OrderService = require('./orders');
 const ActivityService = require('./activity');
+const moment = require('moment');
 
 const BitmexService = {
-  async selectCandles({ uuid, pair, payload }) {
+  async selectCandles({
+    uuid,
+    pair,
+    count = 1000,
+    interval = '1m',
+    start_date = '1970-01-01T00:00:00Z',
+    end_date = moment.utc().format(),
+  }) {
     const user = await AuthService.authBitmex(uuid);
-
-    let { count, interval, start_date, end_date } = payload;
-    count = count || 1000;
-    interval = interval || '1m';
-    start_date = start_date || '1970-01-01T00:00:00Z';
-
     const candles = await BitmexUtils.handleRequest({
       verb: 'GET',
       route: encodeURI(
@@ -73,7 +75,7 @@ const BitmexService = {
       ...user,
     });
     const order = await OrderService.bitmexLimitOrder({ user, limit, pair });
-    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    await ActivityService.activityBitmexOrder({ user, order, pair });
     return order;
   },
   async createMarketOrders({ uuid, payload }) {
@@ -88,7 +90,7 @@ const BitmexService = {
       ...user,
     });
     const order = await OrderService.bitmexMarketOrder({ user, market, pair });
-    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    await ActivityService.activityBitmexOrder({ user, order, pair });
     return order;
   },
   async createStopOrders({ uuid, payload }) {
@@ -103,7 +105,7 @@ const BitmexService = {
       ...user,
     });
     const order = await OrderService.bitmexStopOrder({ user, stop, pair });
-    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    await ActivityService.activityBitmexOrder({ user, order, pair });
     return order;
   },
   async createStopLimitOrders({ uuid, payload }) {
@@ -118,7 +120,7 @@ const BitmexService = {
       ...user,
     });
     const order = await OrderService.bitmexStopOrder({ user, stop, pair });
-    await ActivityService.activityOrder('BitMEX', { user, order, pair });
+    await ActivityService.activityBitmexOrder({ user, order, pair });
     return order;
   },
   async selectOrders(uuid) {
