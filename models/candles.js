@@ -98,8 +98,8 @@ const CandleModel = {
       h1: `${exchange}_candles_h1`,
       d1: `${exchange}_candles_d1`,
     };
-    if (limit > 5000) {
-      limit = 5000;
+    if (limit > 100000) {
+      limit = 100000;
     }
     const sql = {
       select: `SELECT * FROM ${tables[interval]}
