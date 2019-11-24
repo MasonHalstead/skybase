@@ -41,6 +41,37 @@ router.get('/', auth, async (req, res) => {
 
 /**
  * @swagger
+ * /bitmex/orders/:order_id:
+ *   get:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /bitmex/orders/:order_id
+ *     tags:
+ *       - Bitmex
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         schema:
+ *          type: array
+ *          items:
+ *            type: object
+ *            $ref: '#/definitions/Bitmex'
+ */
+
+router.get('/:order_id', auth, async (req, res) => {
+  const { uuid } = req.user;
+  const { order_id } = req.params;
+  try {
+    const orders = await BitmexService.selectOrder({ uuid, order_id });
+    res.send(orders);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
  * /bitmex/orders/limit:
  *   post:
  *     security:

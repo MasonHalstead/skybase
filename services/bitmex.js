@@ -144,6 +144,15 @@ const BitmexService = {
     });
     return orders;
   },
+  async selectOrder({ uuid, order_id }) {
+    const user = await AuthService.authBitmex(uuid);
+    const orders = await BitmexUtils.handleRequest({
+      verb: 'GET',
+      route: encodeURI(`/api/v1/order?filter={"orderID":"${order_id}"}`),
+      ...user,
+    });
+    return orders[0] || {};
+  },
   async selectPositions(uuid) {
     const user = await AuthService.authBitmex(uuid);
     const positions = await BitmexUtils.handleRequest({
