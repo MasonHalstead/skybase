@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * @swagger
  * /bitmex/candles/:pair:
- *   get:
+ *   post:
  *     security:
  *       - ApiKeyAuth: []
  *     summary: /bitmex/candles/:pair
@@ -54,7 +54,7 @@ const router = express.Router();
  *            $ref: '#/definitions/Bitmex'
  */
 
-router.get('/:pair', auth, async (req, res) => {
+router.post('/:pair', auth, async (req, res) => {
   const { uuid } = req.user;
   const { pair } = req.params;
   try {
