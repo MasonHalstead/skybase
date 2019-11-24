@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * @swagger
  * /bitmex/funding/:pair:
- *   get:
+ *   post:
  *     security:
  *       - ApiKeyAuth: []
  *     summary: /bitmex/funding/:pair

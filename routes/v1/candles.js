@@ -28,7 +28,7 @@ const CandleModel = require('../../models/candles');
 /**
  * @swagger
  * /candles/:exchange/:pair/:interval:
- *   get:
+ *   post:
  *     security:
  *       - ApiKeyAuth: []
  *     summary: /candles/:exchange/:pair/:interval
@@ -56,7 +56,7 @@ const CandleModel = require('../../models/candles');
  *            $ref: '#/definitions/Candle'
  */
 
-router.get('/:exchange/:pair/:interval', auth, async (req, res) => {
+router.post('/:exchange/:pair/:interval', auth, async (req, res) => {
   const { exchange, pair, interval } = req.params;
   const { start_date, end_date, count } = req.body;
   try {
