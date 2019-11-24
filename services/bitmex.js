@@ -33,7 +33,7 @@ const BitmexService = {
     const funding = await BitmexUtils.handleRequest({
       verb: 'GET',
       route: encodeURI(
-        `/api/v1/funding?symbol=${pair}&count=${count}&partial=false`,
+        `/api/v1/funding?symbol=${pair}&count=${count}&reverse=true&partial=false`,
       ),
       ...user,
     });
