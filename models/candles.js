@@ -45,14 +45,17 @@ const CandleModel = {
     try {
       candles.forEach(candle => {
         const [date_time, open, high, low, close, , volume] = candle;
+        if (!open || !high || !low || !close) {
+          return;
+        }
         pool.query(sql.insert, [
           pair,
           moment.unix(date_time).format(),
-          open || 0,
-          high || 0,
-          low || 0,
-          close || 0,
-          volume * 100000000 || 0,
+          open,
+          high,
+          low,
+          close,
+          volume * 100000000,
         ]);
       });
     } catch (err) {
@@ -69,14 +72,17 @@ const CandleModel = {
     try {
       candles.forEach(candle => {
         const { symbol, timestamp, open, high, low, close, volume } = candle;
+        if (!open || !high || !low || !close) {
+          return;
+        }
         pool.query(sql.insert, [
           symbol,
           timestamp,
-          open || 0,
-          high || 0,
-          low || 0,
-          close || 0,
-          volume || 0,
+          open,
+          high,
+          low,
+          close,
+          volume,
         ]);
       });
     } catch (err) {
