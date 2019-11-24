@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * @swagger
  * /kraken/candles/:pair:
- *   get:
+ *   post:
  *     security:
  *       - ApiKeyAuth: []
  *     summary: /kraken/candles/:pair
@@ -49,7 +49,7 @@ const router = express.Router();
  *            $ref: '#/definitions/Kraken'
  */
 
-router.get('/:pair', auth, async (req, res) => {
+router.post('/:pair', auth, async (req, res) => {
   const { uuid } = req.user;
   const { pair } = req.params;
   try {

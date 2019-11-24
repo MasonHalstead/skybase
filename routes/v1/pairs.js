@@ -63,7 +63,7 @@ const PairModel = require('../../models/pairs');
 
 router.get('/', auth, async (req, res) => {
   try {
-    const pairs = await PairModel.PairModel();
+    const pairs = await PairModel.selectPairs();
     res.status(200).send(pairs);
   } catch (err) {
     res.status(401).send(err.message);

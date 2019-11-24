@@ -102,8 +102,9 @@ const CandleModel = {
       h1: `${exchange}_candles_h1`,
       d1: `${exchange}_candles_d1`,
     };
+    const table = tables[interval] || `${exchange}_candles_m1`;
     const sql = {
-      select: `SELECT * FROM ${tables[interval]}
+      select: `SELECT * FROM ${table}
       WHERE pair = $1
       AND date_time >= $2
       AND date_time <= $3
