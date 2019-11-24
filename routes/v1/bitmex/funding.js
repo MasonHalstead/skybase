@@ -39,7 +39,7 @@ const router = express.Router();
  *            $ref: '#/definitions/Bitmex'
  */
 
-router.get('/:pair', auth, async (req, res) => {
+router.post('/:pair', auth, async (req, res) => {
   const { uuid } = req.user;
   const { pair } = req.params;
   try {
