@@ -76,7 +76,10 @@ const BitmexService = {
     });
     const order = await OrderService.bitmexLimitOrder({ user, limit, pair });
     await ActivityService.activityBitmexOrder({ user, order, pair });
-    return order;
+    return {
+      skydax: order,
+      bitmex: limit,
+    };
   },
   async createMarketOrders({ uuid, payload }) {
     const { symbol } = payload;
@@ -91,7 +94,10 @@ const BitmexService = {
     });
     const order = await OrderService.bitmexMarketOrder({ user, market, pair });
     await ActivityService.activityBitmexOrder({ user, order, pair });
-    return order;
+    return {
+      skydax: order,
+      bitmex: market,
+    };
   },
   async createStopOrders({ uuid, payload }) {
     const { symbol } = payload;
@@ -106,7 +112,10 @@ const BitmexService = {
     });
     const order = await OrderService.bitmexStopOrder({ user, stop, pair });
     await ActivityService.activityBitmexOrder({ user, order, pair });
-    return order;
+    return {
+      skydax: order,
+      bitmex: stop,
+    };
   },
   async createStopLimitOrders({ uuid, payload }) {
     const { symbol } = payload;
@@ -121,7 +130,10 @@ const BitmexService = {
     });
     const order = await OrderService.bitmexStopOrder({ user, stop, pair });
     await ActivityService.activityBitmexOrder({ user, order, pair });
-    return order;
+    return {
+      skydax: order,
+      bitmex: stop,
+    };
   },
   async selectOrders(uuid) {
     const user = await AuthService.authBitmex(uuid);
