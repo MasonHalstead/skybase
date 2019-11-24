@@ -33,8 +33,8 @@
   "dependencies": {
     "app-root-path": "^3.0.0",
     "bcryptjs": "^2.4.3",
+    "bitmex-realtime-api": "^0.4.3",
     "body-parser": "^1.19.0",
-    "ccxt": "^1.19.56",
     "chalk": "^2.4.2",
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
@@ -55,6 +55,7 @@
     "random-number": "0.0.9",
     "request-promise": "^4.2.5",
     "serve-favicon": "^2.5.0",
+    "socket.io": "^2.3.0",
     "swagger-jsdoc": "^3.4.0",
     "twilio": "^3.37.0",
     "uuid": "^3.3.3",
