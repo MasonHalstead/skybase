@@ -12,6 +12,14 @@ TextEmitter.on('verify_telephone', user => {
   });
 });
 
+TextEmitter.on('message', ({ user, message }) => {
+  client.messages.create({
+    to: user.telephone,
+    from: TWILIO_NUMBER,
+    body: message,
+  });
+});
+
 TextEmitter.on('order', ({ user, activity }) => {
   client.messages.create({
     to: user.telephone,

@@ -16,6 +16,7 @@ const pairs = require('./pairs');
 const equity = require('./equity');
 const bitmex = require('./bitmex/index');
 const kraken = require('./kraken/index');
+const messages = require('./messages');
 const auth = require('./auth');
 
 router.use('/docs', docs);
@@ -23,6 +24,7 @@ router.use('/auth', auth);
 router.use('/equity', equity);
 router.use('/strategies', strategies);
 router.use('/candles', candles);
+router.use('/messages', messages);
 router.use('/users', users);
 router.use('/bitmex', bitmex);
 router.use('/kraken', kraken);

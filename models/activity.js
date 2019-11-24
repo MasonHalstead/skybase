@@ -19,7 +19,7 @@ const ActivityModel = {
   },
   async createActivy(payload) {
     const {
-      customer_id,
+      uuid,
       message,
       reference_table,
       reference_column,
@@ -34,7 +34,7 @@ const ActivityModel = {
     };
     try {
       const res = await pool.query(sql.insert, [
-        customer_id,
+        uuid,
         message,
         reference_table,
         reference_column,
