@@ -12,11 +12,11 @@ const router = express.Router();
 
 /**
  * @swagger
- * /kraken/instruments:
+ * /kraken/pairs:
  *   get:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /kraken/instruments
+ *     summary: /kraken/pairs
  *     tags:
  *       - Kraken
  *     produces:
@@ -32,8 +32,8 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
   try {
-    const instruments = await KrakenService.selectInstruments();
-    res.send(instruments);
+    const pairs = await KrakenService.selectPairs();
+    res.send(pairs);
   } catch (err) {
     res.status(401).send(err.message);
   }
@@ -41,11 +41,11 @@ router.get('/', auth, async (req, res) => {
 
 /**
  * @swagger
- * /kraken/instruments/:instrument:
+ * /kraken/pairs/:pair:
  *   get:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /kraken/instruments/:instrument
+ *     summary: /kraken/pairs/:pair
  *     tags:
  *       - Kraken
  *     produces:
@@ -59,11 +59,11 @@ router.get('/', auth, async (req, res) => {
  *            $ref: '#/definitions/Kraken'
  */
 
-router.get('/:instrument', auth, async (req, res) => {
-  const { instrument } = req.params;
+router.get('/:pair', auth, async (req, res) => {
+  const { pair } = req.params;
   try {
-    const instruments = await KrakenService.selectInstrument(instrument);
-    res.send(instruments);
+    const pairs = await KrakenService.selectPair(pair);
+    res.send(pairs);
   } catch (err) {
     res.status(401).send(err.message);
   }

@@ -6,9 +6,11 @@ const instruments = require('./instruments');
 const trades = require('./trades');
 const positions = require('./positions');
 const orders = require('./orders');
+const composites = require('./composites');
 const wallet = require('./wallet');
 
 router.use('/orders', orders);
+router.use('/composites', composites);
 router.use('/candles', candles);
 router.use('/funding', funding);
 router.use('/instruments', instruments);

@@ -38,8 +38,8 @@ module.exports = async function() {
       await AggregationEmitter.emit('candle_d1', { dates, pair: 'XETHZUSD' });
     }
   });
-  // const historic_job = cron.schedule('0-59/3 * * * * *', async () => {
-  //   const dates = helpers.handleDates(moment());
-  //   await BitmexEmitter.emit('historic_eth', { dates, historic_job });
-  // });
+  const historic_job = cron.schedule('0-59/3 * * * * *', async () => {
+    const dates = helpers.handleDates(moment());
+    await BitmexEmitter.emit('historic_bxbt', { dates, historic_job });
+  });
 };

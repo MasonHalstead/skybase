@@ -24,6 +24,23 @@ const BitmexService = {
     });
     return candles;
   },
+  async selectComposites({
+    uuid,
+    instrument,
+    count = 500,
+    start_date = '1970-01-01T00:00:00Z',
+    end_date = moment.utc().format(),
+  }) {
+    const user = await AuthService.authBitmex(uuid);
+    const composites = await BitmexUtils.handleRequest({
+      verb: 'GET',
+      route: encodeURI(
+        `/api/v1/instrument/compositeIndex?symbol=${instrument}&count=${count}&startTime=${start_date}&endTime=${end_date}&filter={"reference":"BMI"}`,
+      ),
+      ...user,
+    });
+    return composites;
+  },
   async selectFunding({ uuid, pair, payload }) {
     const user = await AuthService.authBitmex(uuid);
 

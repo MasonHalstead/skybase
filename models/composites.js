@@ -33,7 +33,10 @@ const CompositeModel = {
     try {
       composites.forEach(composite => {
         const { symbol, timestamp, lastPrice } = composite;
-        pool.query(sql.insert, [symbol, timestamp, lastPrice || 0]);
+        if (!lastPrice) {
+          return;
+        }
+        pool.query(sql.insert, [symbol, timestamp, lastPrice]);
       });
     } catch (err) {
       throw new Error(err.detail);

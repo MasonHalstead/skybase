@@ -47,7 +47,7 @@ const handlePrivateRequest = async ({ method, kraken_key, kraken_secret }) => {
     };
     const res = await request(options);
     return handleRequestError(res);
-  } catch {
+  } catch (err) {
     throw new Error('Error handling Kraken request');
   }
 };
@@ -74,6 +74,7 @@ const orders = (order, options) => {
   const {
     type,
     price,
+    pair,
     trigger_price,
     volume,
     leverage,
@@ -84,7 +85,7 @@ const orders = (order, options) => {
   let unix_start;
   let unix_expires;
 
-  if (!order || !type || !price || !volume || !leverage) {
+  if (!order || !pair || !type || !volume) {
     throw new Error('Invalid Kraken order');
   }
   if (start_date) {
@@ -94,8 +95,9 @@ const orders = (order, options) => {
     unix_expires = moment(expires_date).unix();
   }
   const kraken_query = {
-    ordertype: order,
+    pair,
     type,
+    ordertype: order,
     price,
     price2: trigger_price,
     volume,

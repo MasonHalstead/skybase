@@ -28,8 +28,29 @@ const KrakenService = {
     });
     return candles[pair];
   },
-  async selectInstrument({ instrument }) {
-    return kraken.marketsById[instrument];
+  async selectPairs() {
+    const pairs = await KrakenUtils.handlePublicRequest({
+      method: `AssetPairs`,
+    });
+    return pairs;
+  },
+  async selectPair(pair) {
+    const pairs = await KrakenUtils.handlePublicRequest({
+      method: `AssetPairs?pair=${pair}`,
+    });
+    return pairs;
+  },
+  async selectInstruments() {
+    const instruments = await KrakenUtils.handlePublicRequest({
+      method: `Assets`,
+    });
+    return instruments;
+  },
+  async selectInstrument(instrument) {
+    const instruments = await KrakenUtils.handlePublicRequest({
+      method: `Assets?asset=${instrument}`,
+    });
+    return instruments;
   },
   async selectPositions(uuid) {
     const user = await AuthService.authKraken(uuid);
@@ -62,13 +83,12 @@ const KrakenService = {
     const user = await AuthService.authKraken(uuid);
     const query = await KrakenUtils.orders(order_type, rest);
     const order = await KrakenUtils.handlePrivateRequest({
-      method: `AddOrder/${query}`,
+      method: `AddOrder?${query}`,
       kraken_secret: user.kraken_secret,
       kraken_key: user.kraken_key,
     });
-    console.log(order);
-    // await ActivityService.activityKrakenOrder({ user, order: payload });
-    return res.result;
+    // await k.activityKrakenOrder({ user, order: payload });
+    return order;
   },
 };
 
