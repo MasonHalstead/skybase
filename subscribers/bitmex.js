@@ -7,7 +7,7 @@ const Composites = require('../models/composites');
 
 let historic_xbt_date = '2016-05-01T00:00:00Z';
 let historic_eth_date = '2018-07-01T00:00:00Z';
-let historic_bxbt_date = '2017-03-10T00:00:00.000Z';
+let historic_bxbt_date = '2017-12-05T17:20:00Z';
 
 BitmexEmitter.on('candle_m1', async ({ dates, pair }) => {
   // Collects the last 2 minutes 1m candles

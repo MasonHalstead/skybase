@@ -108,6 +108,7 @@ const CandleModel = {
       WHERE pair = $1
       AND date_time >= $2
       AND date_time <= $3
+      ORDER BY date_time ASC
       LIMIT 100000;`,
     };
     try {

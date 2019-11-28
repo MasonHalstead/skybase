@@ -58,12 +58,11 @@ const CandleModel = require('../../models/candles');
 
 router.post('/:exchange/:pair/:interval', auth, async (req, res) => {
   const { exchange, pair, interval } = req.params;
-  const { start_date, end_date, count } = req.body;
+  const { start_date, end_date } = req.body;
   try {
     const candles = await CandleModel.selectCandles({
       exchange,
       interval,
-      count,
       pair,
       start_date,
       end_date,
