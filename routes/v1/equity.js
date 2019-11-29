@@ -23,11 +23,11 @@ const EquityModel = require('../../models/equity');
 
 /**
  * @swagger
- * /equity/:pair:
- *   get:
+ * /equity/bitmex/:pair:
+ *   post:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /equity/:pair
+ *     summary: /equity/bitmex/:pair
  *     tags:
  *       - Equity
  *     produces:
@@ -52,13 +52,14 @@ const EquityModel = require('../../models/equity');
  *            $ref: '#/definitions/Equity'
  */
 
-router.get('/:pair', auth, async (req, res) => {
+router.post('/bitmex/:pair', auth, async (req, res) => {
   const { pair } = req.params;
   const { uuid } = req.user;
   try {
     const equity = await EquityModel.selectUserEquity({
       uuid,
       pair,
+      ...res.body,
     });
     res.status(200).send(equity);
   } catch (err) {

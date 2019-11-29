@@ -1,9 +1,11 @@
 const pool = require('../db/skydax');
+const moment = require('moment');
 
 const EquityModel = {
   async schema() {
     const schema = `
       id BIGSERIAL PRIMARY KEY,
+      exchange_id INT REFERENCES exchanges (id),
       customer_id TEXT REFERENCES users (uuid),
       pair TEXT REFERENCES pairs (combined_name),
       balance NUMERIC,
@@ -39,15 +41,28 @@ const EquityModel = {
       throw new Error(err.detail);
     }
   },
-  async selectUserEquity({ uuid, pair }) {
+  async selectUserEquity({
+    uuid,
+    pair,
+    start_date = '1970-01-01T00:00:00Z',
+    end_date = moment.utc().format(),
+  }) {
     const sql = {
       select: `SELECT * FROM equity 
       WHERE customer_id = $1 
       AND pair = $2
-      LIMIT 100;`,
+      AND date_time >= $3
+      AND date_time <= $4
+      ORDER BY date_time ASC
+      LIMIT 100000;`,
     };
     try {
-      const res = await pool.query(sql.select, [uuid, pair]);
+      const res = await pool.query(sql.select, [
+        uuid,
+        pair,
+        start_date,
+        end_date,
+      ]);
       return res.rows;
     } catch (err) {
       throw new Error(err.detail);
