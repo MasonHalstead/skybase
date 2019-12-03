@@ -29,7 +29,7 @@ const AuthService = {
     if (!user.kraken_key || !user.kraken_secret) {
       throw new Error('Invalid Kraken API credentials');
     }
-    await KrakenUtils.handlePrivateRequest({
+    await KrakenUtils.handleRequest({
       method: `Balance`,
       kraken_secret: user.kraken_secret,
       kraken_key: user.kraken_key,

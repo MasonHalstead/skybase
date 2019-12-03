@@ -55,7 +55,7 @@ const CandleModel = {
           high,
           low,
           close,
-          volume * 100000000,
+          volume,
         ]);
       });
     } catch (err) {
