@@ -10,7 +10,7 @@ KrakenEmitter.on('candle_m1', async ({ dates, pair }) => {
     const unix_m2 = await moment(dates.date_clone_m2).unix();
     const candles = await KrakenService.selectJobCandles({
       pair,
-      start_date: unix_m2,
+      unix: unix_m2,
       interval: 1,
     });
     Candles.insertKrakenCandles(candles, pair, 'kraken_candles_m1');
@@ -25,7 +25,7 @@ KrakenEmitter.on('candle_m5', async ({ dates, pair }) => {
     const unix_m5 = await moment(dates.date_clone_m5).unix();
     const candles_m1 = await KrakenService.selectJobCandles({
       pair,
-      start_date: unix_m5,
+      unix: unix_m5,
       interval: 1,
     });
     Candles.insertKrakenCandles(candles_m1, pair, 'kraken_candles_m1');
@@ -38,7 +38,7 @@ KrakenEmitter.on('candle_m5', async ({ dates, pair }) => {
     const unix_m10 = await moment(dates.date_clone_m10).unix();
     const candles_m5 = await KrakenService.selectJobCandles({
       pair,
-      start_date: unix_m10,
+      unix: unix_m10,
       interval: 5,
     });
     Candles.insertKrakenCandles(candles_m5, pair, 'kraken_candles_m5');

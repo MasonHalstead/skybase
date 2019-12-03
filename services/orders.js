@@ -33,6 +33,22 @@ const OrderService = {
     });
     return order;
   },
+  async krakenMarketOrder({ user, market, order_id, pair }) {
+    const order = await OrderModel.createOrder({
+      customer_id: user.uuid,
+      exchange_id: 2,
+      exchange_account_id: null,
+      exchange_order_id: order_id,
+      exchange_order_status: market.status,
+      pair_id: pair.id,
+      order_type_id: 2,
+      side: market.descr.type,
+      quantity: market.price,
+      price: market.cost,
+      status_id: 1,
+    });
+    return order;
+  },
   async bitmexStopOrder({ user, stop, pair }) {
     const order = await OrderModel.createOrder({
       customer_id: user.uuid,

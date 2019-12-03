@@ -31,6 +31,7 @@
     "prettier": "^1.18.2"
   },
   "dependencies": {
+    "@warren-bank/node-kraken-api": "^3.0.0",
     "app-root-path": "^3.0.0",
     "bcryptjs": "^2.4.3",
     "bitmex-realtime-api": "^0.4.3",

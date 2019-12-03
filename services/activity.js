@@ -13,10 +13,10 @@ const ActivityService = {
     TextEmitter.emit('order', { user, activity });
     return activity;
   },
-  async activityKrakenOrder({ user, order }) {
+  async activityKrakenOrder({ user, order, pair }) {
     const activity = await ActivityModel.createActivy({
       uuid: user.uuid,
-      message: `BitMEX ${order.side} order ${order.exchange_order_status} ${order.quantity} ${pair.combined_name} at ${order.price}.`,
+      message: `Kraken ${order.side} order ${order.exchange_order_status} ${order.quantity} ${pair.combined_name} at ${order.price}.`,
       reference_table: 'orders',
       reference_column: 'id',
       reference_id: order.id,

@@ -22,6 +22,17 @@
         true
     ],
     [
+        "ETH_XBT",
+        "ETH/XBT",
+        "ETHXBT",
+        "ETH",
+        "XBT",
+        true,
+        true,
+        true,
+        true
+    ],
+    [
         "XXBT_ZUSD",
         "XXBT/ZUSD",
         "XXBTZUSD",
@@ -38,6 +49,17 @@
         "XETHZUSD",
         "XETH",
         "ZUSD",
+        false,
+        false,
+        false,
+        true
+    ],
+    [
+        "XETH_XXBT",
+        "XETH/XXBT",
+        "XETHXXBT",
+        "XETH",
+        "XXBT",
         false,
         false,
         false,

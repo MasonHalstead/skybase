@@ -55,11 +55,13 @@ const EquityModel = require('../../models/equity');
 router.post('/bitmex/:pair', auth, async (req, res) => {
   const { pair } = req.params;
   const { uuid } = req.user;
+  const { start_date, end_date } = req.body;
   try {
     const equity = await EquityModel.selectUserEquity({
       uuid,
       pair,
-      ...res.body,
+      start_date,
+      end_date,
     });
     res.status(200).send(equity);
   } catch (err) {

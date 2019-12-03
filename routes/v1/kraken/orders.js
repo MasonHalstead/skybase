@@ -91,10 +91,9 @@ router.get('/', auth, async (req, res) => {
 router.post('/limit', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
-    const order = await KrakenService.createOrders({
+    const order = await KrakenService.createLimitOrders({
       uuid,
-      order_type: 'limit',
-      ...req.body,
+      payload: req.body,
     });
     res.send(order);
   } catch (err) {
@@ -154,73 +153,9 @@ router.post('/limit', auth, async (req, res) => {
 router.post('/market', auth, async (req, res) => {
   const { uuid } = req.user;
   try {
-    const order = await KrakenService.createOrders({
+    const order = await KrakenService.createMarketOrders({
       uuid,
-      order_type: 'market',
-      ...req.body,
-    });
-    res.send(order);
-  } catch (err) {
-    res.status(401).send(err.message);
-  }
-});
-
-/**
- * @swagger
- * /kraken/market/stop-loss:
- *   post:
- *     security:
- *       - ApiKeyAuth: []
- *     summary: /kraken/market/stop-loss
- *     tags:
- *       - Kraken
- *     produces:
- *       - application/json
- *     requestBody:
- *       required: true
- *       content:
- *         key=value:
- *          schema:
- *            type: object
- *            properties:
- *              type:
- *                type: string
- *              price:
- *                type: number
- *              trigger_price:
- *                type: number
- *              volume:
- *                type: number
- *              leverage:
- *                type: number
- *              start_date:
- *                type: date
- *              expires_date:
- *                type: date
- *     responses:
- *       200:
- *         schema:
- *          type: object
- *          properties:
- *            skydax:
- *              type: array
- *              items:
- *                type: object
- *                $ref: '#/definitions/Kraken'
- *            kraken:
- *              type: array
- *              items:
- *                type: object
- *                $ref: '#/definitions/Kraken'
- */
-
-router.post('/stop-loss', auth, async (req, res) => {
-  const { uuid } = req.user;
-  try {
-    const order = await KrakenService.createOrders({
-      uuid,
-      order_type: 'stop-loss',
-      ...req.body,
+      payload: req.body,
     });
     res.send(order);
   } catch (err) {
