@@ -24,7 +24,7 @@ const EquityModel = {
     const sql = {
       insert: `INSERT INTO equity 
       (customer_id, pair, balance, price_conversion)
-      VALUES($1, $2, $3, $4, $5)
+      VALUES($1, $2, $3, $4)
       RETURNING *`,
     };
     try {
