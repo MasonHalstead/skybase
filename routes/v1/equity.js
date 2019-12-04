@@ -103,14 +103,13 @@ router.post('/bitmex/:pair', auth, async (req, res) => {
 router.post('/:pair', auth, async (req, res) => {
   const { pair } = req.params;
   const { uuid } = req.user;
-  const { date_time, balance, price_conversion } = req.body;
+  const { balance, price_conversion } = req.body;
   try {
     const equity = await EquityModel.createEquity({
       uuid,
       pair,
       balance,
       price_conversion,
-      date_time,
     });
     res.status(200).send(equity);
   } catch (err) {
