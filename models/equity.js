@@ -5,7 +5,6 @@ const EquityModel = {
   async schema() {
     const schema = `
       id BIGSERIAL PRIMARY KEY,
-      exchange_id INT REFERENCES exchanges (id),
       customer_id TEXT REFERENCES users (uuid),
       pair TEXT REFERENCES pairs (combined_name),
       balance NUMERIC,
@@ -21,10 +20,10 @@ const EquityModel = {
       throw new Error('Equity table schema error');
     }
   },
-  async createEquity({ uuid, pair, balance, price_conversion, date_time }) {
+  async createEquity({ uuid, pair, balance, price_conversion }) {
     const sql = {
       insert: `INSERT INTO equity 
-      (customer_id, pair, balance, price_conversion, date_time)
+      (customer_id, pair, balance, price_conversion)
       VALUES($1, $2, $3, $4, $5)
       RETURNING *`,
     };
@@ -34,7 +33,6 @@ const EquityModel = {
         pair,
         balance,
         price_conversion,
-        date_time,
       ]);
       return res.rows[0];
     } catch (err) {
