@@ -43,6 +43,8 @@ const encryptUser = async (uuid, user) => {
   let binance_us_secret = null;
   let kraken_key = null;
   let kraken_secret = null;
+  let oanda_key = null;
+  let oanda_secret = null;
 
   if (user.password) {
     password = await createPassword(user.password);
@@ -71,6 +73,12 @@ const encryptUser = async (uuid, user) => {
   if (user.kraken_secret) {
     kraken_secret = await crypto.encrypt(user.kraken_secret);
   }
+  if (user.oanda_key) {
+    oanda_key = await crypto.encrypt(user.oanda_key);
+  }
+  if (user.oanda_secret) {
+    oanda_secret = await crypto.encrypt(user.oanda_secret);
+  }
 
   return [
     uuid,
@@ -88,6 +96,8 @@ const encryptUser = async (uuid, user) => {
     binance_us_secret,
     kraken_key,
     kraken_secret,
+    oanda_key,
+    oanda_secret,
     updated_at,
   ];
 };
@@ -101,6 +111,8 @@ const privateUser = async user => {
   let binance_us_secret = false;
   let kraken_key = false;
   let kraken_secret = false;
+  let oanda_key = false;
+  let oanda_secret = false;
 
   if (user.bitmex_key) {
     bitmex_key = true;
@@ -126,6 +138,12 @@ const privateUser = async user => {
   if (user.kraken_secret) {
     kraken_secret = true;
   }
+  if (user.oanda_key) {
+    oanda_key = true;
+  }
+  if (user.oanda_secret) {
+    oanda_secret = true;
+  }
   return {
     uuid: user.uuid,
     admin: user.admin,
@@ -145,6 +163,8 @@ const privateUser = async user => {
     binance_us_secret,
     kraken_key,
     kraken_secret,
+    oanda_key,
+    oanda_secret,
     token: tokens.createToken(user),
   };
 };
@@ -157,6 +177,8 @@ const publicUser = async user => {
   let binance_us_secret = null;
   let kraken_key = null;
   let kraken_secret = null;
+  let oanda_key = null;
+  let oanda_secret = null;
 
   if (user.bitmex_key) {
     bitmex_key = crypto.decrypt(user.bitmex_key);
@@ -182,6 +204,12 @@ const publicUser = async user => {
   if (user.kraken_secret) {
     kraken_secret = crypto.decrypt(user.kraken_secret);
   }
+  if (user.oanda_key) {
+    oanda_key = crypto.decrypt(user.oanda_key);
+  }
+  if (user.oanda_secret) {
+    oanda_secret = crypto.decrypt(user.oanda_secret);
+  }
   return {
     uuid: user.uuid,
     email_address: user.email_address,
@@ -202,6 +230,8 @@ const publicUser = async user => {
     binance_us_secret,
     kraken_key,
     kraken_secret,
+    oanda_key,
+    oanda_secret,
     token: tokens.createToken(user),
   };
 };

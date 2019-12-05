@@ -10,6 +10,11 @@ const UserService = {
     EmailEmitter.emit('send_verify_email', user);
     return user.token;
   },
+  async resendUserVerification(uuid) {
+    const user = await UserModel.selectUser(uuid, false);
+    EmailEmitter.emit('send_verify_email', user);
+    return user.token;
+  },
   async updateUserTelephone(uuid, telephone) {
     const user = await UserModel.updateUserTelephone(uuid, telephone);
     TextEmitter.emit('verify_telephone', user);

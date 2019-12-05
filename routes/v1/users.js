@@ -235,11 +235,11 @@ router.put('/update', auth, async (req, res) => {
 
 /**
  * @swagger
- * /users/verify-email:
+ * /email/:verify:
  *   post:
  *     security:
  *       - ApiKeyAuth: []
- *     summary: /users/verify-email
+ *     summary: /email/:verify
  *     tags:
  *       - Users
  *     produces:
@@ -261,11 +261,49 @@ router.put('/update', auth, async (req, res) => {
  *          $ref: '#/definitions/Users'
  */
 
-router.post('/verify-email', async (req, res) => {
-  const { email_verification } = req.body;
+router.get('/email/:verify', async (req, res) => {
+  const { verify } = req.params;
   try {
-    const user = await UserModel.verifyUserEmail(email_verification);
+    const user = await UserModel.verifyUserEmail(verify);
     res.status(200).send(user);
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+/**
+ * @swagger
+ * /email/:verify:
+ *   post:
+ *     security:
+ *       - ApiKeyAuth: []
+ *     summary: /email/:verify
+ *     tags:
+ *       - Users
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         key=value:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              email_verification:
+ *                type: string
+ *            required:
+ *              - email_verification
+ *     responses:
+ *       200:
+ *         schema:
+ *          $ref: '#/definitions/Users'
+ */
+
+router.get('/resend/verfication', auth, async (req, res) => {
+  const { uuid } = req.user;
+  try {
+    const token = await UserService.resendUserVerification(uuid);
+    res.status(200).send(token);
   } catch (err) {
     res.status(401).send(err.message);
   }

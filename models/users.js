@@ -19,6 +19,8 @@ const UserModel = {
       password TEXT,
       temporary_password TEXT,
       wallet_address TEXT,
+      oanda_key TEXT,
+      oanda_secret TEXT,
       bitmex_key TEXT,
       bitmex_secret TEXT,
       binance_key TEXT,
@@ -27,6 +29,8 @@ const UserModel = {
       binance_us_secret TEXT,
       kraken_key TEXT,
       kraken_secret TEXT,
+      oanda_key TEXT,
+      oanda_secret TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     `;
@@ -66,7 +70,7 @@ const UserModel = {
       throw new Error(err.detail);
     }
   },
-  async verifyUserEmail(email_verification) {
+  async verifyUserEmail(verify) {
     const sql = {
       select: 'SELECT * FROM users WHERE email_verification = $1 LIMIT 1',
       update: `UPDATE users SET
@@ -74,7 +78,7 @@ const UserModel = {
         WHERE uuid = $1;`,
     };
     try {
-      const res = await pool.query(sql.select, [email_verification]);
+      const res = await pool.query(sql.select, [verify]);
       if (!res.rows[0]) {
         throw new Error('Email authentication is not valid');
       }
@@ -152,7 +156,9 @@ const UserModel = {
       binance_us_secret = COALESCE($13, binance_us_secret),
       kraken_key = COALESCE($14, kraken_key),
       kraken_secret = COALESCE($15, kraken_secret),
-      updated_at = $16
+      oanda_key = COALESCE($16, oanda_key),
+      oanda_secret = COALESCE($17, oanda_secret),
+      updated_at = $18
       WHERE uuid = $1;`,
     };
     try {

@@ -1,21 +1,18 @@
 const EventEmitter = require('events');
-const nodemailer = require('nodemailer');
-const { CLIENT_DOMAIN } = process.env;
-const EmailEmitter = new EventEmitter();
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'support@skydax.com',
-    pass: 'Skydax88!',
-  },
+const { CLIENT_DOMAIN, MAILGUN_DOMAIN, MAILGUN_KEY } = process.env;
+const mailgun = require('mailgun-js')({
+  apiKey: MAILGUN_KEY,
+  domain: MAILGUN_DOMAIN,
 });
 
-EmailEmitter.on('send_verify_email', async user => {
-  await transporter.sendMail({
-    from: '"Skydax Registration 🚀🌕" <support@skydax.com>',
+const EmailEmitter = new EventEmitter();
+
+EmailEmitter.on('send_verify_email', user => {
+  mailgun.messages().send({
+    from: 'Skydax Registration 🚀🌕 <support@skydax.com>',
     to: user.email_address,
     subject: 'Skydax Registration Almost Complete',
-    text: 'Skydax',
+    text: 'Skydax Registration',
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html style="width:100%;font-family:verdana, geneva, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;">
      <head> 
@@ -112,7 +109,7 @@ EmailEmitter.on('send_verify_email', async user => {
                       <td width="660" valign="top" align="center" style="padding:0;Margin:0;"> 
                        <table width="100%" cellspacing="0" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;"> 
                          <tr style="border-collapse:collapse;"> 
-                          <td align="center" style="padding:10px;Margin:0;"><span class="es-button-border" style="border-style:solid;border-color:#49566A;background:#2E3440;border-width:0px 0px 2px 0px;display:inline-block;border-radius:5px;width:auto;"><a href="${CLIENT_DOMAIN}/verify/${user.email_verification}" class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:16px;color:#FFFFFF;border-style:solid;border-color:#2E3440;border-width:10px 20px 10px 20px;display:inline-block;background:#2E3440;border-radius:5px;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center;">Verify Email Address</a></span></td> 
+                          <td align="center" style="padding:10px;Margin:0;"><span class="es-button-border" style="border-style:solid;border-color:#49566A;background:#2E3440;border-width:0px 0px 2px 0px;display:inline-block;border-radius:5px;width:auto;"><a href="${CLIENT_DOMAIN}/email/${user.email_verification}" class="es-button" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-size:16px;color:#FFFFFF;border-style:solid;border-color:#2E3440;border-width:10px 20px 10px 20px;display:inline-block;background:#2E3440;border-radius:5px;font-weight:normal;font-style:normal;line-height:19px;width:auto;text-align:center;">Verify Email Address</a></span></td> 
                          </tr> 
                        </table></td> 
                      </tr> 
@@ -142,12 +139,12 @@ EmailEmitter.on('send_verify_email', async user => {
   });
 });
 
-EmailEmitter.on('forgot_password_email', async user => {
-  await transporter.sendMail({
-    from: '"Skydax Password 👻" <support@skydax.com>',
+EmailEmitter.on('forgot_password_email', user => {
+  mailgun.messages().send({
+    from: 'Skydax Password 👻 <support@skydax.com>',
     to: user.email_address,
     subject: 'Skydax New Password',
-    text: 'Skydax',
+    text: 'Skydax Password',
     html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html style="width:100%;font-family:verdana, geneva, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0;">
      <head> 
@@ -276,7 +273,7 @@ EmailEmitter.on('forgot_password_email', async user => {
        </table> 
       </div>  
      </body>
-    </html>`, // html body
+    </html>`,
   });
 });
 
