@@ -200,6 +200,16 @@ const BitmexService = {
     await ActivityService.activityLeverage({ user, leverage });
     return leverage;
   },
+  async selectUserStatus(uuid) {
+    const user = await AuthService.authBitmex(uuid);
+    const wallet = await BitmexUtils.handleRequest({
+      verb: 'GET',
+      route: '/api/v1/user/margin',
+      ...user,
+    });
+
+    return wallet;
+  },
   async selectWallet(uuid) {
     const user = await AuthService.authBitmex(uuid);
     const wallet = await BitmexUtils.handleRequest({

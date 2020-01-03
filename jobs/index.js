@@ -26,6 +26,7 @@ module.exports = async function() {
 
     if (dates.minutes === 0) {
       await AggregationEmitter.emit('candle_h1', { dates, pair: 'XBTUSD' });
+      await AggregationEmitter.emit('equity_h1', { dates, pair: 'XBTUSD' });
       await AggregationEmitter.emit('candle_h1', { dates, pair: 'ETHUSD' });
       await AggregationEmitter.emit('candle_h1', { dates, pair: 'XXBTZUSD' });
       await AggregationEmitter.emit('candle_h1', { dates, pair: 'XETHZUSD' });
@@ -33,6 +34,7 @@ module.exports = async function() {
 
     if ((0 === dates.hours || dates.hours === 1) && dates.minutes === 0) {
       await AggregationEmitter.emit('candle_d1', { dates, pair: 'XBTUSD' });
+      await AggregationEmitter.emit('equity_d1', { dates, pair: 'XBTUSD' });
       await AggregationEmitter.emit('candle_d1', { dates, pair: 'ETHUSD' });
       await AggregationEmitter.emit('candle_d1', { dates, pair: 'XXBTZUSD' });
       await AggregationEmitter.emit('candle_d1', { dates, pair: 'XETHZUSD' });

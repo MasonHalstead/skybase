@@ -16,6 +16,14 @@ const EquityModel = {
         CREATE TABLE IF NOT EXISTS equity(${schema});
         CREATE INDEX IF NOT EXISTS equity_idx ON equity (customer_id, pair, date_time);
         `);
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS equity_h1(${schema});
+        CREATE INDEX IF NOT EXISTS equity_h1_idx ON equity_h1 (customer_id, pair, date_time);
+      `);
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS equity_d1(${schema});
+        CREATE INDEX IF NOT EXISTS equity_d1_idx ON equity_d1 (customer_id, pair, date_time);
+      `);
     } catch (err) {
       throw new Error('Equity table schema error');
     }
@@ -37,6 +45,36 @@ const EquityModel = {
       return res.rows[0];
     } catch (err) {
       throw new Error(err.detail);
+    }
+  },
+  async aggregateEquities({
+    customer_id,
+    pair,
+    from,
+    into,
+    truncate,
+    start_date,
+    end_date,
+  }) {
+    const sql = {
+      insert: `INSERT INTO ${into}(pair, date_time, customer_id, balance, price_conversion)
+        SELECT pair, 
+        DATE_TRUNC('${truncate}', date_time) as composite_date_time,
+        customer_id,
+        AVG(balance) as avg_balance,
+        AVG(price_conversion) as avg_price_conversion
+        FROM ${from}
+        WHERE (customer_id = '${customer_id}') 
+        AND (pair = '${pair}') 
+        AND (date_time between '${start_date}' and '${end_date}')
+        GROUP BY customer_id, pair, composite_date_time
+        ON CONFLICT DO NOTHING;
+      `,
+    };
+    try {
+      pool.query(sql.insert);
+    } catch (err) {
+      throw new Error('candle hourly aggregate error');
     }
   },
   async selectUserEquity({
