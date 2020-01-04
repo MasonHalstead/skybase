@@ -78,19 +78,27 @@ const EquityModel = {
     }
   },
   async selectUserEquity({
+    interval,
     uuid,
     pair,
     start_date = '1970-01-01T00:00:00Z',
     end_date = moment.utc().format(),
   }) {
+    let table = 'equity';
+    if (interval === 'h1') {
+      table = 'equity_h1';
+    }
+    if (interval === 'd1') {
+      table = 'equity_d1';
+    }
     const sql = {
-      select: `SELECT * FROM equity 
+      select: `SELECT * FROM ${table}
       WHERE customer_id = $1 
       AND pair = $2
       AND date_time >= $3
       AND date_time <= $4
       ORDER BY date_time ASC
-      LIMIT 100000;`,
+      LIMIT 10000;`,
     };
     try {
       const res = await pool.query(sql.select, [
